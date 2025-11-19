@@ -52,6 +52,7 @@ $MESS["SERVIS_SMSBY"] = "SMS.BY";
 $MESS["SERVIS_IQSMS"] = "IQSMS.RU - Смс дисконт";
 $MESS["SERVIS_STREAMTELECOM"] = "STREAM-TELECOM.RU";
 $MESS["SERVIS_REDSMSRU"] = "REDSMS.RU";
+$MESS["SERVIS_PROSTOSMS"] = "SMS-PROSTO.RU";
 $MESS["SERVIS_NONE"] = "Отключить";
 $MESS["MLIFESS_IM_ON"] = "Включить уведомления для старых событий интернет магазина (рекомендуется использовать новую систему шаблонов в модуле)";
 $MESS["MLIFESS_IM_PROP_PHONE"] = "Свойство в котором хранится мобильный телефон, для";
