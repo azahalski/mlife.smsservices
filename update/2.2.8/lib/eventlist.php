@@ -71,7 +71,33 @@ class EventlistTable extends Entity\DataManager
 					);
 				},
                 'fetch_data_modification' => function ($value) {
-                    return str_replace(['>>>>>','<<<<<'],['?>', '<?'],$value);
+                    // Если это не строка, то декодировать нечего — возвращаем как есть
+                    if (!is_string($value) || trim($value) === '') {
+                        return is_array($value) ? $value : [];
+                    }
+                    $trimmed = trim($value);
+
+                    // 1. Проверяем на JSON
+                    // Строка JSON должна начинаться на {, [, ", цифру или true/false/null
+                    $firstChar = $trimmed[0] ?? '';
+                    if (in_array($firstChar, ['{', '[', '"', 't', 'f', 'n'] ) || is_numeric($firstChar)) {
+                        $jsonDecoded = json_decode($trimmed, true); // true вернет массив вместо объекта
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            return $jsonDecoded;
+                        }
+                    }
+                    // 2. Проверяем на PHP Serialized
+                    // Сериализованные данные обычно имеют формат a:0:{}, o:4:"Name":... или s:5:"Value";
+                    if (preg_match('/^[aOisb]:\d+:/', $trimmed) || $trimmed === 'b:0;' || $trimmed === 'b:1;' || $trimmed === 'N;') {
+                        // Использование @ подавляет Notice, если строка была похожа на serialized, но оказалась битой
+                        $unserialized = @unserialize($trimmed, ['allowed_classes'=>false]);
+                        if ($unserialized !== false || $trimmed === 'b:0;') {
+                            return $unserialized;
+                        }
+                    }
+
+                    // Если ни один формат не подошел, возвращаем исходную строку
+                    return is_array($value) ? $value : [];
                 }
 				)
 			),

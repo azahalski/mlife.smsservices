@@ -23,9 +23,8 @@ class Fields {
 	
 	public static function newOrderHtml($value=""){
 		
-		if(!$value) serialize(array());
-		
-		$data = unserialize($value, ['allowed_classes'=>false]);
+		if(!$value) \Bitrix\Main\Web\Json::encode(array());
+		$data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -43,10 +42,9 @@ class Fields {
 	}
 	
 	public static function resetPasswordHtml($value=""){
-		
-		if(!$value) serialize(array());
-		
-		$data = unserialize($value, ['allowed_classes'=>false]);
+
+        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
 		$MCR_EXT = Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_RESET_PASSWORD");
@@ -69,16 +67,15 @@ class Fields {
 			"PHONE"=>trim($_REQUEST['PARAMS_PHONE']),
 			"APPSMS"=>trim($_REQUEST['PARAMS_APPSMS']),
 		);
-		$arFields['PARAMS'] = serialize($PARAMS);
+		$arFields['PARAMS'] = \Bitrix\Main\Web\Json::encode($PARAMS);
 		
 		return $arFields;
 	}
 	
 	public static function payedOrderHtml($value=""){
-		
-		if(!$value) serialize(array());
-		
-		$data = unserialize($value, ['allowed_classes'=>false]);
+
+        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -116,16 +113,15 @@ class Fields {
 			"APPSMS"=>trim($_REQUEST['PARAMS_APPSMS']),
 			"PAYED"=>trim($_REQUEST['PARAMS_PAYED']),
 		);
-		$arFields['PARAMS'] = serialize($PARAMS);
+		$arFields['PARAMS'] = \Bitrix\Main\Web\Json::encode($PARAMS);
 		
 		return $arFields;
 	}
 	
 	public static function statusOrderHtml($value=""){
-		
-		if(!$value) serialize(array());
-		
-		$data = unserialize($value, ['allowed_classes'=>false]);
+
+        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -181,16 +177,15 @@ class Fields {
 			"STATUS_FROM"=>trim($_REQUEST['PARAMS_STATUS_FROM']),
 			"STATUS_TO"=>trim($_REQUEST['PARAMS_STATUS_TO'])
 		);
-		$arFields['PARAMS'] = serialize($PARAMS);
+		$arFields['PARAMS'] = \Bitrix\Main\Web\Json::encode($PARAMS);
 		
 		return $arFields;
 	}
 	
 	public static function eventSendHtml($value=""){
-		
-		if(!$value) serialize(array());
-		
-		$data = unserialize($value, ['allowed_classes'=>false]);
+
+        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
 		
@@ -305,7 +300,7 @@ class Fields {
 				//print_r($emess->LAST_ERROR);die();
 			}
 		}
-		$arFields['PARAMS'] = serialize($PARAMS);
+		$arFields['PARAMS'] = \Bitrix\Main\Web\Json::encode($PARAMS);
 		
 		return $arFields;
 	}

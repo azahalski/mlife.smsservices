@@ -227,7 +227,6 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
-					$arData['PARAMS'] = unserialize($arData['PARAMS'], ['allowed_classes'=>false]);
 					if($arData['PARAMS']['PHONE']){
 						$arData['TEMPLATE'] = self::compileTemplate($arData['TEMPLATE'], $arMakros);
 						$phoneAr = str_replace(array_keys($arMakros), $arMakros, $arData['PARAMS']['PHONE']);
@@ -270,7 +269,6 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
-					$arData['PARAMS'] = unserialize($arData['PARAMS'], ['allowed_classes'=>false]);
 					
 					$right = false;
 					
@@ -327,7 +325,6 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
-					$arData['PARAMS'] = unserialize($arData['PARAMS'], ['allowed_classes'=>false]);
 					
 					$right = false;
 					if($arOrderFields['PAYED'] == $arData['PARAMS']['PAYED']) $right = true;
@@ -473,8 +470,7 @@ class Events {
 			)
 		);
 		while($arData = $res->fetch()){
-			
-			$arData['PARAMS'] = unserialize($arData['PARAMS'], ['allowed_classes'=>false]);
+
 			
 			$right = false;
 			
