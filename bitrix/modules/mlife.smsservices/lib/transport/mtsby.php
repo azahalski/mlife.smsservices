@@ -147,7 +147,7 @@ class Mtsby extends \Mlife\Smsservices\Base\Transport{
 
         $client->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $client->setAuthorization($this->config->login, $this->config->passw);
-        $client->disableSslVerification();
+        //$client->disableSslVerification();
         if(!$data){
             return $client->get($url);
         }

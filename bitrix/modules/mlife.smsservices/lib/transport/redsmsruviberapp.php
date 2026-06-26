@@ -160,7 +160,7 @@ class Redsmsruviberapp{
         $ts = microtime().rand(0, 10000);
 		
 		$this->lastHttpClient = new \Bitrix\Main\Web\HttpClient(array('charset'=>'utf-8'));
-		$this->lastHttpClient->disableSslVerification();
+		//$this->lastHttpClient->disableSslVerification();
 		$this->lastHttpClient->setHeader("login", $this->config->login, true);
 		$this->lastHttpClient->setHeader("ts", $ts, true);
 		$this->lastHttpClient->setHeader("sig", md5(implode('', $params).$ts.$this->config->passw), true);

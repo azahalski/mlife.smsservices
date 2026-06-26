@@ -247,7 +247,7 @@ class Esputnik{
 		}
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($ch,CURLOPT_USERPWD, $this->config->login.':'.$this->config->passw);
 		
 		$result = curl_exec($ch);

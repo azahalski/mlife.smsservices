@@ -23,7 +23,7 @@ $bollModuleSale = \Bitrix\Main\Loader::includeModule("sale");
 		$arStatus = array();
 		$arPerson = array();
 		
-		//свойства
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		//$db_props = \CSaleOrderProps::GetList(array("SORT" => "ASC"),array("TYPE" => array('TEXT','TEXTAREA'))); //old module sale
 		$db_props = \CSaleOrderProps::GetList(array("SORT" => "ASC"),array("TYPE" => array('STRING')));
 		while($arProperty = $db_props->Fetch()) {
@@ -38,13 +38,13 @@ $bollModuleSale = \Bitrix\Main\Loader::includeModule("sale");
 			$arMakros[$arProperty["PERSON_TYPE_ID"]]['ORDER_SUM'] = Loc::getMessage("MLIFESS_IM_MACROS7");
 		}
 		
-		//статусы
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$obStatus = \CSaleStatus::GetList();
 		while($ar = $obStatus->Fetch()) {
 			$arStatus[$ar['ID']][$ar['LID']] = $ar['NAME'];
 		}
 		
-		//типы плательщиков
+		//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$db_ptype = \CSalePersonType::GetList(Array("SORT" => "ASC"), Array());
 		$bFirst = True;
 		while ($ptype = $db_ptype->Fetch())
@@ -158,7 +158,6 @@ $tabControl->Begin();
 <?
 $tabControl->BeginNextTab();
 ?>
-	<tr class="heading"><td colspan="2"><?=Loc::getMessage("MLIFESS_OPT_SHLUZ_MAIN_SHARE")?><a href="http://mlife-media.by/tpages/kod-na-500-sms.php?utm_source=mlife_smsservices&utm_medium=bxadmin&utm_term=domain&utm_content=<?=$_SERVER['HTTP_HOST']?>&utm_campaign=smsasistent" target="_blank"><?=Loc::getMessage("MLIFESS_OPT_SHLUZ_MAIN_SHARE_2")?></a> | <a href="http://sms-assistent.by/rekvizity/" target="_blank"><?=Loc::getMessage("MLIFESS_OPT_SHLUZ_MAIN_SHARE_3")?></a></td></tr>
 	<?if(\Bitrix\Main\Config\Option::get('main','sms_default_service','') != 'mlifesmsservices'){?>
 	<tr class="heading">
 	<td colspan="2">

@@ -5,7 +5,7 @@ class Transport {
 	
 	protected function httpClient(){
 		$httpClient = new \Bitrix\Main\Web\HttpClient(array('charset'=>'utf-8'));
-		$httpClient->disableSslVerification();
+		//$httpClient->disableSslVerification();
 		return $httpClient;
 	}
 	
