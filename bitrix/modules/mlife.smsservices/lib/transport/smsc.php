@@ -30,7 +30,7 @@ class Smsc{
 	***********************************************************/
 	public function _getAllSender() {
 		
-		$url = 'http://smsc.ru/sys/get.php?get_senders=1&login='.$this->config->login.'&psw='.$this->config->passw.'&fmt=3';
+		$url = 'https://smsc.ru/sys/get.php?get_senders=1&login='.$this->config->login.'&psw='.$this->config->passw.'&fmt=3';
 		$response = $this->openHttp($url);
 		
 		if(!$response){
@@ -83,7 +83,7 @@ class Smsc{
 		}
 		
 		$pp = '327698';
-		$url =  'http://smsc.ru/sys/send.php?login='.$this->config->login.'&psw='.$this->config->passw.'&phones='.$phones.'&mes='.$mess.
+		$url =  'https://smsc.ru/sys/send.php?login='.$this->config->login.'&psw='.$this->config->passw.'&phones='.$phones.'&mes='.$mess.
 				'&fmt=3&charset='.$charset.'&time='.$time.'&sender='.$sender.'&cost=3&pp='.$pp;
 		$response = $this->openHttp($url);
 		
@@ -111,7 +111,7 @@ class Smsc{
 	***********************************************************/
 	public function _getBalance () {
 	
-		$url = 'http://smsc.ru/sys/balance.php?login='.$this->config->login.'&psw='.$this->config->passw.'&fmt=3';
+		$url = 'https://smsc.ru/sys/balance.php?login='.$this->config->login.'&psw='.$this->config->passw.'&fmt=3';
 		$response = $this->openHttp($url);
 
 		if(!$response){
@@ -127,7 +127,7 @@ class Smsc{
 	
 	public function _getStatusSms($smsid,$phone=false) {
 		
-		$url = 'http://smsc.ru/sys/status.php?login='.$this->config->login.'&psw='.$this->config->passw.'&phone='.$phone.'&id='.$smsid.'&fmt=3';
+		$url = 'https://smsc.ru/sys/status.php?login='.$this->config->login.'&psw='.$this->config->passw.'&phone='.$phone.'&id='.$smsid.'&fmt=3';
 		$response = $this->openHttp($url);
 
 		if(!$response){

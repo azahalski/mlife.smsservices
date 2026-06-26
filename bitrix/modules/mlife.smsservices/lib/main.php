@@ -441,7 +441,7 @@ class Main {
 						<?
 					}elseif($type=="STRING"){
 						?>
-						<input type="text" name="<?=$row?>" value="<?echo htmlspecialchars(${$row})?>">
+						<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
 						<?
 					}elseif($type=="BOOL"){
 						if(is_array($field["VALUES"])){

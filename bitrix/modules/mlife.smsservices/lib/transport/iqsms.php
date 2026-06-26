@@ -173,7 +173,7 @@ class Iqsms{
 		
 		$smsIdAr = explode('__',$smsid);
 		
-		$url = 'http://api.iqsms.ru/messages/v2/status.json';
+		$url = 'https://api.iqsms.ru/messages/v2/status.json';
 		$params = array(
 			'login'=>$this->config->login,
 			'password'=>$this->config->passw,
