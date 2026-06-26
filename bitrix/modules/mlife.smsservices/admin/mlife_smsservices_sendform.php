@@ -37,7 +37,7 @@ if($_REQUEST['event'] && strpos($_REQUEST['event'],'MSMS_ORDER_')!==false){
 	
 }
 
-//TODO можно добавить в следующий релиз, опционально выбирать отправителя
+//TODO пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //$senderOptions = $smsServices->getAllSender();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $MODULE_RIGHT == "W" && strlen($_REQUEST["Send"]) > 0)
 {
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $MODULE_RIGHT == "W" && strlen($_REQ
 	else{
 		
 		$phoneCheck = $smsServices->checkPhoneNumber($_REQUEST['phone']);
-		$phone = $phoneCheck['phone'];
+		$phone = htmlspecialcharsEx($phoneCheck['phone']);
 		
 		
 		
@@ -83,13 +83,13 @@ $aTabs = array(
 $tabControl = new \CAdminTabControl("tabControl", $aTabs);
 $tabControl->Begin();
 ?>
-<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=$_REQUEST['event']?>" id="FORMACTION">
+<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
 <?
 $tabControl->BeginNextTab();
 ?>
 	
 	<?if($_REQUEST['event']){?>
-	<tr><td colspan="2" style="text-align:center;font-weight:bold;"><?=Loc::getMessage("MLIFESS_SENDFORM_ORDER")?> <?=$_REQUEST['event']?><br/><br/></td></tr>
+	<tr><td colspan="2" style="text-align:center;font-weight:bold;"><?=Loc::getMessage("MLIFESS_SENDFORM_ORDER")?> <?=htmlspecialcharsEx($_REQUEST['event'])?><br/><br/></td></tr>
 	<?}?>
 	<?
 	if($orderId){
@@ -126,7 +126,7 @@ $tabControl->BeginNextTab();
 			</select>
 			<?}else{
 			?>
-			<input type="text" size="28" maxlength="255" value="<?=$current?>" name="sender" autocomplete="off">
+			<input type="text" size="28" maxlength="255" value="<?=htmlspecialcharsEx($current)?>" name="sender" autocomplete="off">
 			<?
 			}?>
 		</td>
@@ -135,14 +135,14 @@ $tabControl->BeginNextTab();
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_SENDFORM_PHONE")?>*:</td>
 		<td>
-			<input type="text" size="28" maxlength="255" value="<?=$phone?>" name="phone">
+			<input type="text" size="28" maxlength="255" value="<?=htmlspecialcharsEx($phone)?>" name="phone">
 		</td>
 		</td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_SENDFORM_MESS")?>*:</td>
 		<td>
-			<textarea cols="27" rows="5" name="message"><?=$message?></textarea>
+			<textarea cols="27" rows="5" name="message"><?=htmlspecialcharsEx($message)?></textarea>
 		</td>
 	</tr>
 

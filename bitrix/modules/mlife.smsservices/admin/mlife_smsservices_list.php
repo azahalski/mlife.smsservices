@@ -27,7 +27,7 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 		} else {
 			$row->AddViewField("TIME_ST", Loc::getMessage("MLIFESS_LIST_TIME_ST_L"));
 		}
-		$row->AddViewField("STATUS", '<font class="status_'.(($row->arRes['STATUS']==14 || $row->arRes['STATUS']==15) ? 4 :$row->arRes['STATUS']).'">'.Loc::getMessage("MLIFESS_LIST_STATUS_".$row->arRes['STATUS']).'</font>');
+		$row->AddViewField("STATUS", '<font class="status_'.(($row->arRes['STATUS']==14 || $row->arRes['STATUS']==15) ? 4 : htmlspecialcharsEx($row->arRes['STATUS'])).'">'.Loc::getMessage("MLIFESS_LIST_STATUS_".$row->arRes['STATUS']).'</font>');
 	}
 	
 }

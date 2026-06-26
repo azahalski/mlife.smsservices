@@ -25,7 +25,7 @@ class Fields {
 		
 		if(!$value) serialize(array());
 		
-		$data = unserialize($value);
+		$data = unserialize($value, ['allowed_classes'=>false]);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -46,7 +46,7 @@ class Fields {
 		
 		if(!$value) serialize(array());
 		
-		$data = unserialize($value);
+		$data = unserialize($value, ['allowed_classes'=>false]);
 		
 		$macros = '';
 		$MCR_EXT = Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_RESET_PASSWORD");
@@ -78,7 +78,7 @@ class Fields {
 		
 		if(!$value) serialize(array());
 		
-		$data = unserialize($value);
+		$data = unserialize($value, ['allowed_classes'=>false]);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -125,7 +125,7 @@ class Fields {
 		
 		if(!$value) serialize(array());
 		
-		$data = unserialize($value);
+		$data = unserialize($value, ['allowed_classes'=>false]);
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
@@ -190,7 +190,7 @@ class Fields {
 		
 		if(!$value) serialize(array());
 		
-		$data = unserialize($value);
+		$data = unserialize($value, ['allowed_classes'=>false]);
 		
 		$macros = '';
 		

@@ -25,10 +25,10 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 		$row->AddViewField("TEMPLATE", '<font style="font-size:12px;">'.$row->arRes['TEMPLATE'].'</font>');
 		$row->AddCheckField("ACTIVE");
 		
-		$params = unserialize(htmlspecialcharsBack($row->arRes['PARAMS']));
+		$params = unserialize($row->arRes['PARAMS'], ['allowed_classes'=>false]);
 		$html = '';
 		foreach($params as $name=>$val){
-			$html .= $name.': '.$val.';<br/>';
+			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';
 		}
 		$row->AddViewField("PARAMS", '<font style="font-size:12px;">'.$html.'</font>');
 		$row->AddInputField("NAME", array("size"=>20));

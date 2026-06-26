@@ -127,7 +127,7 @@ if($REQUEST_METHOD == "POST" && ($save!="" || $apply!="") && $POST_RIGHT=="W" &&
 
 $str_SITE_ID = "";
 $str_SENDER = "";
-$str_EVENT = ($_REQUEST['EVENT']) ? trim($_REQUEST['EVENT']) : "";
+$str_EVENT = ($_REQUEST['EVENT']) ? htmlspecialcharsEx(trim($_REQUEST['EVENT'])) : "";
 $str_TEMPLATE = ($TEMPLATE) ? $TEMPLATE : "";
 $str_PARAMS = "";
 $str_ACTIVE = "Y";
