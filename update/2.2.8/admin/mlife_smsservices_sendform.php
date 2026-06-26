@@ -39,7 +39,7 @@ if($_REQUEST['event'] && strpos($_REQUEST['event'],'MSMS_ORDER_')!==false){
 
 //TODO ����� �������� � ��������� �����, ����������� �������� �����������
 //$senderOptions = $smsServices->getAllSender();
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $MODULE_RIGHT == "W" && strlen($_REQUEST["Send"]) > 0)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $MODULE_RIGHT == "W" && strlen($_REQUEST["Send"]) > 0 && check_bitrix_sessid())
 {
 	$message = strip_tags($_REQUEST['message']);
 	$smsServices->translit = $_REQUEST['translit'] ? true : false;
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $MODULE_RIGHT == "W" && strlen($_REQ
 		
 		
 		if($phoneCheck['check']) {
-			$resp = $smsServices->sendSms($phone, $message, MakeTimeStamp($datesend, "DD.MM.YYYY HH:MI:SS"),trim($_REQUEST['sender']),Loc::getMessage("MLIFESS_SENDFORM_PRIM"));
+			$resp = $smsServices->sendSms($phone, $message, MakeTimeStamp($_REQUEST['datesend'], "DD.MM.YYYY HH:MI:SS"),trim($_REQUEST['sender']),Loc::getMessage("MLIFESS_SENDFORM_PRIM"));
 			if(!$resp->error){
 				\ShowNote(Loc::getMessage("MLIFESS_SENDFORM_NOTICE_SEND"),'mlifenoticeok');
 				$phone = false;
@@ -84,7 +84,8 @@ $tabControl = new \CAdminTabControl("tabControl", $aTabs);
 $tabControl->Begin();
 ?>
 <form method="POST" action="<?echo $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
-<?
+    <?=bitrix_sessid_post()?>
+    <?
 $tabControl->BeginNextTab();
 ?>
 	
