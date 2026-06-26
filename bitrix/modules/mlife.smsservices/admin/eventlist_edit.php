@@ -45,7 +45,6 @@ $TEMPLATE = trim($_REQUEST['TEMPLATE'] ?? '');
 global $USER;
 if (stripos($TEMPLATE, '<?') !== false && !$USER->CanDoOperation('edit_php')) {
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');
-    $TEMPLATE = str_replace(['<?', '?>'],['<<<<<','>>>>>']);
 }
 
 if($REQUEST_METHOD == "POST" && ($save!="" || $apply!="") && $POST_RIGHT=="W" && check_bitrix_sessid() && empty($errorAr)){

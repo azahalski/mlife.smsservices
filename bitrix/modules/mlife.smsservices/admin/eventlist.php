@@ -25,7 +25,7 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 		$row->AddViewField("TEMPLATE", '<font style="font-size:12px;">'.$row->arRes['TEMPLATE'].'</font>');
 		$row->AddCheckField("ACTIVE");
 		
-		$params = unserialize($row->arRes['PARAMS'], ['allowed_classes'=>false]);
+		$params = $row->arRes['PARAMS'];
 		$html = '';
 		foreach($params as $name=>$val){
 			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';
