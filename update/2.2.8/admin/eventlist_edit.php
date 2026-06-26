@@ -251,7 +251,7 @@ $tabControl->BeginNextTab();
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_NAME")?></td>
 <td width="60%">
 	<?if(!$str_NAME) $str_NAME = $eventDefault['NAME'];?>
-	<input type="text" name="NAME" value="<?=$str_NAME?>"/>
+	<input type="text" name="NAME" value="<?=htmlspecialcharsEx($str_NAME)?>"/>
 </td>
 </tr>
 <tr>
@@ -273,7 +273,7 @@ $tabControl->BeginNextTab();
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_SENDER")?></td>
 <td width="60%">
-	<input type="text" name="SENDER" value="<?=$str_SENDER?>"/>
+	<input type="text" name="SENDER" value="<?=htmlspecialcharsEx($str_SENDER)?>"/>
 	<br/><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_SENDER_DESC")?>
 </td>
 </tr>
