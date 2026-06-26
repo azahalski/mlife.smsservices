@@ -21,8 +21,8 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 	
 	public function getMlifeRowListAdminCustomRow($row){
 		
-		$row->AddViewField("SENDER", ($row->arRes['SENDER']) ? $row->arRes['SENDER'] : \Bitrix\Main\Config\Option::get("mlife.smsservices","sender","",""));
-		$row->AddViewField("TEMPLATE", '<font style="font-size:12px;">'.$row->arRes['TEMPLATE'].'</font>');
+		$row->AddViewField("SENDER", ($row->arRes['SENDER']) ? htmlspecialcharsEx($row->arRes['SENDER']) : \Bitrix\Main\Config\Option::get("mlife.smsservices","sender","",""));
+		$row->AddViewField("TEMPLATE", '<font style="font-size:12px;">'.htmlspecialcharsEx($row->arRes['TEMPLATE']).'</font>');
 		$row->AddCheckField("ACTIVE");
 		
 		$params = $row->arRes['PARAMS'];

@@ -21,12 +21,11 @@ class EventlistTable extends Entity\DataManager
 	
 	public static function getMap()
 	{
-		return array(
+		return [
 			new Entity\IntegerField('ID', array(
 				'primary' => true,
 				'autocomplete' => true,
-				)
-			),
+				)),
 			new Entity\StringField('SITE_ID', array(
 				'required' => true,
 				'validation' => function(){
@@ -34,8 +33,7 @@ class EventlistTable extends Entity\DataManager
 						new Entity\Validator\Length(null, 10),
 					);
 				}
-				)
-			),
+				)),
 			new Entity\StringField('SENDER', array(
 				'required' => false,
 				'validation' => function(){
@@ -43,8 +41,7 @@ class EventlistTable extends Entity\DataManager
 						new Entity\Validator\Length(null, 50),
 					);
 				}
-				)
-			),
+				)),
 			new Entity\StringField('EVENT', array(
 				'required' => true,
 				'validation' => function(){
@@ -52,8 +49,7 @@ class EventlistTable extends Entity\DataManager
 						new Entity\Validator\Length(null, 50),
 					);
 				}
-				)
-			),
+				)),
 			new Entity\StringField('NAME', array(
 				'required' => true,
 				'validation' => function(){
@@ -61,8 +57,51 @@ class EventlistTable extends Entity\DataManager
 						new Entity\Validator\Length(null, 255),
 					);
 				}
-				)
-			),
+				)),
+            new Entity\StringField('PARAMS', array(
+                    'required' => false,
+                    'validation' => function(){
+                        return array(
+                            new Entity\Validator\Length(null, 6255),
+                        );
+                    },
+                    'fetch_data_modification' => function(){
+                    return [
+                        function ($value) {
+                            // Если это не строка, то декодировать нечего — возвращаем как есть
+                            if (!is_string($value) || trim($value) === '') {
+                                return is_array($value) ? $value : '';
+                            }
+                            $trimmed = trim($value);
+
+                            // 1. Проверяем на JSON
+                            // Строка JSON должна начинаться на {, [, ", цифру или true/false/null
+                            $firstChar = $trimmed[0] ?? '';
+                            if (in_array($firstChar, ['{', '[', '"', 't', 'f', 'n']) || is_numeric($firstChar)) {
+                                return $trimmed;
+                            }
+                            // 2. Проверяем на PHP Serialized
+                            // Сериализованные данные обычно имеют формат a:0:{}, o:4:"Name":... или s:5:"Value";
+                            if (preg_match('/^[aOisb]:\d+:/', $trimmed) || $trimmed === 'b:0;' || $trimmed === 'b:1;' || $trimmed === 'N;') {
+                                // Использование @ подавляет Notice, если строка была похожа на serialized, но оказалась битой
+                                $unserialized = @unserialize($trimmed, ['allowed_classes' => false]);
+                                return \Bitrix\Main\Web\Json::encode($unserialized);
+                            }
+
+                            // Если ни один формат не подошел, возвращаем исходную строку
+                            return $value;
+                        }
+                    ];
+                }
+                )),
+            new Entity\StringField('ACTIVE', array(
+                    'required' => false,
+                    'validation' => function(){
+                        return array(
+                            new Entity\Validator\Length(null, 1),
+                        );
+                    }
+                )),
 			new Entity\StringField('TEMPLATE', array(
 				'required' => false,
 				'validation' => function(){
@@ -70,58 +109,9 @@ class EventlistTable extends Entity\DataManager
 						new Entity\Validator\Length(null, 2500),
 					);
 				},
-                'fetch_data_modification' => function ($value) {
-                    // Если это не строка, то декодировать нечего — возвращаем как есть
-                    if (!is_string($value) || trim($value) === '') {
-                        return is_array($value) ? $value : [];
-                    }
-                    $trimmed = trim($value);
-
-                    // 1. Проверяем на JSON
-                    // Строка JSON должна начинаться на {, [, ", цифру или true/false/null
-                    $firstChar = $trimmed[0] ?? '';
-                    if (in_array($firstChar, ['{', '[', '"', 't', 'f', 'n'] ) || is_numeric($firstChar)) {
-                        $jsonDecoded = json_decode($trimmed, true); // true вернет массив вместо объекта
-                        if (json_last_error() === JSON_ERROR_NONE) {
-                            return $jsonDecoded;
-                        }
-                    }
-                    // 2. Проверяем на PHP Serialized
-                    // Сериализованные данные обычно имеют формат a:0:{}, o:4:"Name":... или s:5:"Value";
-                    if (preg_match('/^[aOisb]:\d+:/', $trimmed) || $trimmed === 'b:0;' || $trimmed === 'b:1;' || $trimmed === 'N;') {
-                        // Использование @ подавляет Notice, если строка была похожа на serialized, но оказалась битой
-                        $unserialized = @unserialize($trimmed, ['allowed_classes'=>false]);
-                        if ($unserialized !== false || $trimmed === 'b:0;') {
-                            return $unserialized;
-                        }
-                    }
-
-                    // Если ни один формат не подошел, возвращаем исходную строку
-                    return is_array($value) ? $value : [];
-                }
-				)
-			),
-			new Entity\StringField('PARAMS', array(
-				'required' => false,
-				'validation' => function(){
-					return array(
-						new Entity\Validator\Length(null, 6255),
-					);
-				}
-				)
-			),
-			new Entity\StringField('ACTIVE', array(
-				'required' => false,
-				'validation' => function(){
-					return array(
-						new Entity\Validator\Length(null, 1),
-					);
-				}
-				)
-			)
-		);
+            ))
+		];
 	}
-	
 	
 	public static function onAfterAdd(\Bitrix\Main\Entity\Event $event){
 		$params = $event->getParameter('fields');

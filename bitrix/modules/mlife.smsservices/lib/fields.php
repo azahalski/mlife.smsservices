@@ -23,7 +23,7 @@ class Fields {
 	
 	public static function newOrderHtml($value=""){
 		
-		if(!$value) \Bitrix\Main\Web\Json::encode(array());
+		if(!$value) $value = \Bitrix\Main\Web\Json::encode(array());
 		$data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
@@ -43,7 +43,7 @@ class Fields {
 	
 	public static function resetPasswordHtml($value=""){
 
-        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        if(!$value) $value = \Bitrix\Main\Web\Json::encode(array());
         $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
@@ -74,7 +74,7 @@ class Fields {
 	
 	public static function payedOrderHtml($value=""){
 
-        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        if(!$value) $value = \Bitrix\Main\Web\Json::encode(array());
         $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
@@ -120,7 +120,7 @@ class Fields {
 	
 	public static function statusOrderHtml($value=""){
 
-        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        if(!$value) $value = \Bitrix\Main\Web\Json::encode(array());
         $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
@@ -184,7 +184,7 @@ class Fields {
 	
 	public static function eventSendHtml($value=""){
 
-        if(!$value) \Bitrix\Main\Web\Json::encode(array());
+        if(!$value) $value = \Bitrix\Main\Web\Json::encode(array());
         $data = \Bitrix\Main\Web\Json::decode($value);
 		
 		$macros = '';
