@@ -437,7 +437,7 @@ class Main {
 					global ${$row};
 					if($type=="INT"){
 						?>
-						<input type="text" name="<?=$row?>" value="<?echo ${$row}?>">
+						<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
 						<?
 					}elseif($type=="STRING"){
 						?>
@@ -473,7 +473,7 @@ class Main {
 					<?
 					}elseif($type=="CALENDAR"){
 					?>
-					<input type="text" name="<?=$row?>" value="<?echo ${$row}?>">
+					<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
 					<?
 					}
 				}?>
