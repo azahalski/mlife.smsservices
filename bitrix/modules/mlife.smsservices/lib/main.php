@@ -229,6 +229,11 @@ class Main {
 					}
 				}
 
+                global $USER;
+                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?') !== false && !$USER->CanDoOperation('edit_php')) {
+                    unset($arData['TEMPLATE']);
+                }
+
 				
 				if(isset($act["edit"])){
 					call_user_func($act["edit"], $ID, $arData);
