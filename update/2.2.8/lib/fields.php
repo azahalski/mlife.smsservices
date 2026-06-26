@@ -29,9 +29,9 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
-		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.$data['PHONE'].'"/></td>';
+		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_APPSMS").'</b></td>';
@@ -50,9 +50,9 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_RESET_PASSWORD");
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
-		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.$data['PHONE'].'"/></td>';
+		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_APPSMS").'</b></td>';
@@ -82,9 +82,9 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
-		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.$data['PHONE'].'"/></td>';
+		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_APPSMS").'</b></td>';
@@ -100,7 +100,7 @@ class Fields {
 			foreach($statusAr as $stat){
 				$selected = '';
 				if($stat['ID'] == $data['PAYED']) $selected = ' selected="selected"';
-				$html .= '<option value="'.$stat['ID'].'"'.$selected.'>['.$stat['ID'].'] - '.$stat['NAME'].'</option>';
+				$html .= '<option value="'.htmlspecialcharsEx($stat['ID']).'"'.$selected.'>['.htmlspecialcharsEx($stat['ID']).'] - '.htmlspecialcharsEx($stat['NAME']).'</option>';
 			}
 		$html .= '</select>';
 		$html .= '</td>';
@@ -129,10 +129,10 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
-		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.$data['PHONE'].'"/></td>';
+		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_APPSMS").'</b></td>';
@@ -152,7 +152,7 @@ class Fields {
 			foreach($statusAr as $stat){
 				$selected = '';
 				if($stat['ID'] == $data['STATUS_FROM']) $selected = ' selected="selected"';
-				$html .= '<option value="'.$stat['ID'].'"'.$selected.'>['.$stat['ID'].'] - '.$stat['NAME'].'</option>';
+				$html .= '<option value="'.htmlspecialcharsEx($stat['ID']).'"'.$selected.'>['.htmlspecialcharsEx($stat['ID']).'] - '.htmlspecialcharsEx($stat['NAME']).'</option>';
 			}
 		$html .= '</select>';
 		$html .= '</td>';
@@ -164,7 +164,7 @@ class Fields {
 			foreach($statusAr as $stat){
 				$selected = '';
 				if($stat['ID'] == $data['STATUS_TO']) $selected = ' selected="selected"';
-				$html .= '<option value="'.$stat['ID'].'"'.$selected.'>['.$stat['ID'].'] - '.$stat['NAME'].'</option>';
+				$html .= '<option value="'.htmlspecialcharsEx($stat['ID']).'"'.$selected.'>['.htmlspecialcharsEx($stat['ID']).'] - '.htmlspecialcharsEx($stat['NAME']).'</option>';
 			}
 		$html .= '</select>';
 		$html .= '</td>';
@@ -212,7 +212,7 @@ class Fields {
 				'filter' => array('EVENT_NAME'=>$data['EVENT_NAME'],'LID'=>'ru')
 			))->fetch();
 			if($resType){
-				$defaultMactosText = '<b>'.$resType['NAME'].'</b><br><pre>'.htmlspecialcharsBack($resType['DESCRIPTION']).'</pre>';
+				$defaultMactosText = '<b>'.$resType['NAME'].'</b><br><pre>'.$resType['DESCRIPTION'].'</pre>';
 			}
 			if(strpos($resType['DESCRIPTION'],'#ORDER_ID#')!==false && strpos($data['EVENT_NAME'],'SALE')!==false) {
 				$defaultMactosText .= '<br>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER_");
@@ -230,10 +230,10 @@ class Fields {
 			$arAllType[$dt['EVENT_NAME']] = '['.$dt['EVENT_NAME'].'] - '.$dt['NAME'];
 		}
 		
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$defaultMactosText.'<br>*'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_BXEVENT_NOTE").'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($defaultMactosText).'<br>*'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_BXEVENT_NOTE").'</td></tr><tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
-		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.$data['PHONE'].'"/></td>';
+		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_APPSMS").'</b></td>';
@@ -243,10 +243,10 @@ class Fields {
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_EVENT_NAME").'</b></td>';
 		$html .= '<td>';
-		$html .= '<input type="hidden" name="PARAMS_EVENT_NAME" value="'.$data['EVENT_NAME'].'">';
+		$html .= '<input type="hidden" name="PARAMS_EVENT_NAME" value="'.htmlspecialcharsEx($data['EVENT_NAME']).'">';
 			foreach($arAllType as $statKey=>$stat){
 				if($statKey == $data['EVENT_NAME']) {
-				$html .= $stat;
+				$html .= htmlspecialcharsEx($stat);
 				}
 			}
 		$html .= '';
@@ -261,7 +261,7 @@ class Fields {
 		));
 		$opt = '';
 		while($d = $r_site->fetch()){
-			$opt .= '<option value="'.$d['ID'].'"'.($d['ID']==$data['ID'] ? ' selected="selected"' : '').'>'.$d['ID'].' - '.$d["SUBJECT"].'</option>';
+			$opt .= '<option value="'.htmlspecialcharsEx($d['ID']).'"'.($d['ID']==$data['ID'] ? ' selected="selected"' : '').'>'.htmlspecialcharsEx($d['ID']).' - '.htmlspecialcharsEx($d["SUBJECT"]).'</option>';
 		}
 		
 		//$html .= '<td><input type="text" name="PARAMS_ID" value="'.$data['ID'].'"/></td>';

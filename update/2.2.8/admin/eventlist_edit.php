@@ -40,11 +40,18 @@ $message = null;
 $bVarsFromForm = false;
 $bVarsShowForm = true;
 
-if($REQUEST_METHOD == "POST" && ($save!="" || $apply!="") && $POST_RIGHT=="W" && check_bitrix_sessid()){
+$TEMPLATE = trim($_REQUEST['TEMPLATE'] ?? '');
+
+global $USER;
+if (stripos($TEMPLATE, '<?') !== false && !$USER->CanDoOperation('edit_php')) {
+    $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');
+}
+
+if($REQUEST_METHOD == "POST" && ($save!="" || $apply!="") && $POST_RIGHT=="W" && check_bitrix_sessid() && empty($errorAr)){
 	
 	$noupdate = false;
 	
-	$TEMPLATE = trim($_REQUEST['TEMPLATE']);
+
 	
 	/*if(!$isUserHavePhpAccess)
 	{
