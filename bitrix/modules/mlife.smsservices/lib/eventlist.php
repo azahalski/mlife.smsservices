@@ -69,7 +69,10 @@ class EventlistTable extends Entity\DataManager
 					return array(
 						new Entity\Validator\Length(null, 2500),
 					);
-				}
+				},
+                'fetch_data_modification' => function ($value) {
+                    return str_replace(['>>>>>','<<<<<'],['?>', '<?'],$value);
+                }
 				)
 			),
 			new Entity\StringField('PARAMS', array(
