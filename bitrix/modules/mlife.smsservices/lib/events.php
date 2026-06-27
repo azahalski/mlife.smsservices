@@ -384,7 +384,7 @@ class Events {
             'link', 'symlink', 'ini_set', 'ini_get', 'set_time_limit', 'header', 'setcookie', 'parse_ini_file', 'error_reporting',
             'move_uploaded_file', 'tmpfile',
             'readfile', 'scandir', 'phpinfo', 'getenv', 'get_defined_constants', 'get_declared_classes', 'get_defined_vars',
-            'get_loaded_extensions', 'parse_str', 'show_source', 'highlight_file', 'opendir', 'readdir'
+            'get_loaded_extensions', 'parse_str', 'show_source', 'highlight_file', 'opendir', 'readdir', 'unserialize'
         ];
 
         // 3. Полный список функций PHP, принимающих callable-аргументы

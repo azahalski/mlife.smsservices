@@ -470,7 +470,7 @@ foreach($arSites as $siteId=>$siteName){
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS")?> <?=$statusname[LANGUAGE_ID]?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_".$statusid."_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_<?=$statusid?>_<?=$persid?>" id="mess_status_<?=$siteId?>_<?=$statusid?>_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_<?=$statusid?>_<?=$persid?>" id="mess_status_<?=$siteId?>_<?=$statusid?>_<?=$persid?>"><?=htmlspecialcharsbx($val)?></textarea>
 		</td>
 	</tr>
 	<?php
