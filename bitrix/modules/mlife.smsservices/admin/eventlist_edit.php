@@ -40,9 +40,6 @@ $message = null;
 $bVarsFromForm = false;
 $bVarsShowForm = true;
 
-$TEMPLATE = '';
-$TEMPLATE_PRE = trim($_REQUEST['TEMPLATE'] ?? '');
-
 global $USER;
 if (stripos($TEMPLATE_PRE, '<?') !== false && !$USER->CanDoOperation('edit_php')) {
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');

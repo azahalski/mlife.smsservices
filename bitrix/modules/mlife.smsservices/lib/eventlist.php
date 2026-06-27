@@ -22,48 +22,48 @@ class EventlistTable extends Entity\DataManager
 	public static function getMap()
 	{
 		return [
-			new Entity\IntegerField('ID', array(
+			new Entity\IntegerField('ID', [
 				'primary' => true,
 				'autocomplete' => true,
-				)),
-			new Entity\StringField('SITE_ID', array(
+            ]),
+			new Entity\StringField('SITE_ID', [
 				'required' => true,
 				'validation' => function(){
-					return array(
+					return [
 						new Entity\Validator\Length(null, 10),
-					);
+                    ];
 				}
-				)),
-			new Entity\StringField('SENDER', array(
+            ]),
+			new Entity\StringField('SENDER', [
 				'required' => false,
 				'validation' => function(){
-					return array(
+					return [
 						new Entity\Validator\Length(null, 50),
-					);
+                    ];
 				}
-				)),
-			new Entity\StringField('EVENT', array(
+            ]),
+			new Entity\StringField('EVENT', [
 				'required' => true,
 				'validation' => function(){
-					return array(
+					return [
 						new Entity\Validator\Length(null, 50),
-					);
+                    ];
 				}
-				)),
-			new Entity\StringField('NAME', array(
+            ]),
+			new Entity\StringField('NAME', [
 				'required' => true,
 				'validation' => function(){
-					return array(
+					return [
 						new Entity\Validator\Length(null, 255),
-					);
+                    ];
 				}
-				)),
-            new Entity\StringField('PARAMS', array(
+            ]),
+            new Entity\StringField('PARAMS', [
                     'required' => false,
                     'validation' => function(){
-                        return array(
+                        return [
                             new Entity\Validator\Length(null, 6255),
-                        );
+                        ];
                     },
                     'fetch_data_modification' => function(){
                     return [
@@ -93,24 +93,24 @@ class EventlistTable extends Entity\DataManager
                         }
                     ];
                 }
-                )),
-            new Entity\StringField('ACTIVE', array(
+            ]),
+            new Entity\StringField('ACTIVE', [
                     'required' => false,
                     'validation' => function(){
-                        return array(
+                        return [
                             new Entity\Validator\Length(null, 1),
-                        );
+                        ];
                     }
-                )),
-			new Entity\StringField('TEMPLATE', array(
+            ]),
+			new Entity\StringField('TEMPLATE', [
 				'required' => false,
 				'validation' => function(){
-					return array(
+					return [
 						new Entity\Validator\Length(null, 2500),
-					);
+                    ];
 				},
-            ))
-		];
+            ])
+        ];
 	}
 	
 	public static function onAfterAdd(\Bitrix\Main\Entity\Event $event){
