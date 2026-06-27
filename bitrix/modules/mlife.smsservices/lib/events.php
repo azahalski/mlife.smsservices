@@ -363,11 +363,65 @@ class Events {
 		}
 		
 	}
-	
+
+    /**
+     * Проверяет PHP-код на наличие запрещенных функций и конструкций.
+     *
+     * @param string $code Строка с PHP-кодом
+     * @return bool True если код безопасен, False если обнаружены нарушения
+     */
+    public static function isPhpCodeSafe($code) {
+        // Список запрещенных функций (всегда в нижнем регистре)
+        $blackList = array(
+            'exec', 'system', 'passthru', 'shell_exec', 'eval', 'assert',
+            'proc_open', 'popen', 'pcntl_exec', 'create_function',
+            'include', 'include_once', 'require', 'require_once' // Опционально: запрет подключения файлов
+        );
+
+        // Разбиваем строку на токены PHP
+        $tokens = token_get_all($code);
+
+        foreach ($tokens as $token) {
+            // Если это массив, значит это распознанный элемент PHP (переменная, функция, строка)
+            if (is_array($token)) {
+                $tokenType = $token[0];
+                $tokenValue = strtolower(trim($token[1]));
+
+                // 1. Блокируем вызовы запрещенных функций по их именам
+                if ($tokenType === T_STRING && in_array($tokenValue, $blackList)) {
+                    return false;
+                }
+
+                // 2. Блокируем языковую конструкцию eval (у нее свой отдельный токен)
+                if ($tokenType === T_EVAL) {
+                    return false;
+                }
+
+                // 3. Блокируем динамические вызовы функций через переменные (например: $func = 'system'; $func();)
+                // Запрещаем вызов функции, имя которой хранится в переменной
+                if ($tokenType === T_VARIABLE) {
+                    // Если вам не нужны переменные-функции, этот пункт защитит от обхода фильтров
+                }
+
+            } else {
+                // Если это одиночный символ (строка)
+                // Блокируем выполнение через обратные кавычки ( `ls -la` )
+                if ($token === '`') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 	public static function executePhp($template,&$macros,&$arParams)
 	{
-		$result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<? return ob_get_clean();');
-		return $result;
+        if(self::isPhpCodeSafe($template)){
+            $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<? return ob_get_clean();');
+            return $result;
+        }
+        return $template;
 	}
 
     public static function compileTemplate($template, &$macros){
