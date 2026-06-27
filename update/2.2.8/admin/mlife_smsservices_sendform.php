@@ -1,4 +1,4 @@
-<?
+<?php
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
@@ -9,7 +9,7 @@ $phone = '';
 if (! ($MODULE_RIGHT >= "R"))
 	$APPLICATION->AuthForm(Loc::getMessage("ACCESS_DENIED"));
 ?>
-<?
+<?php
 $APPLICATION->SetTitle(Loc::getMessage("MLIFESS_SENDFORM_TITLE"));
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
@@ -83,22 +83,22 @@ $aTabs = array(
 $tabControl = new \CAdminTabControl("tabControl", $aTabs);
 $tabControl->Begin();
 ?>
-<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
+<form method="POST" action="<?phpecho $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
     <?=bitrix_sessid_post()?>
-    <?
+    <?php
 $tabControl->BeginNextTab();
 ?>
 	
-	<?if($_REQUEST['event']){?>
+	<?phpif($_REQUEST['event']){?>
 	<tr><td colspan="2" style="text-align:center;font-weight:bold;"><?=Loc::getMessage("MLIFESS_SENDFORM_ORDER")?> <?=htmlspecialcharsEx($_REQUEST['event'])?><br/><br/></td></tr>
-	<?}?>
-	<?
+	<?php}?>
+	<?php
 	if($orderId){
 	
 		if(count($phoneAr)>1){
 			?>
 			<tr><td colspan="2" style="text-align:center;font-weight:bold;"><?=Loc::getMessage("MLIFESS_SENDFORM_ORDERPHONE")?>: <?=implode(',',$phoneAr)?><br/><br/></td></tr>
-			<?
+			<?php
 		}
 	
 	}
@@ -106,29 +106,29 @@ $tabControl->BeginNextTab();
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_SENDFORM_SENDER")?>:</td>
 		<td>
-			<?
+			<?php
 			$current = ($_REQUEST['sender']) ? trim($_REQUEST['sender']) : \Bitrix\Main\Config\Option::get($module_id, "sender", "","");
 			if(!$senderOptions->error && count($senderOptions)>1 && false){?>
 			<select name="sender" id="sender">
-				<?
+				<?php
 				$cn = 0;
 				foreach($senderOptions as $sender){
 				$cn++;
 				?>
-				<option value="<?=$sender->sender?>"<?if($sender->sender == $current){?> selected="selected"<?}?>><?=$sender->sender?></option>
+				<option value="<?=$sender->sender?>"<?phpif($sender->sender == $current){?> selected="selected"<?php}?>><?=$sender->sender?></option>
 
-				<?}
+				<?php}
 				if($cn == 0) {
 				?>
 				<option value="<?=$current?>" selected="selected"><?=$current?></option>
-				<?
+				<?php
 				}
 				?>
 			</select>
-			<?}else{
+			<?php}else{
 			?>
 			<input type="text" size="28" maxlength="255" value="<?=htmlspecialcharsEx($current)?>" name="sender" autocomplete="off">
-			<?
+			<?php
 			}?>
 		</td>
 		</td>
@@ -150,7 +150,7 @@ $tabControl->BeginNextTab();
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_SENDFORM_DATE")?>:</td>
 		<td>
-			<?echo \CalendarDate("datesend", $_REQUEST['datesend'], "datesend", "25", "class=\"date\"")?>
+			<?phpecho \CalendarDate("datesend", $_REQUEST['datesend'], "datesend", "25", "class=\"date\"")?>
 		</td>
 	</tr>
 	<tr>
@@ -165,14 +165,14 @@ $tabControl->BeginNextTab();
 			<input type="checkbox" name="app" value="Y"/>
 		</td>
 	</tr>
-	<?
+	<?php
 $tabControl->Buttons();
 ?>
-	<input <?if ($MODULE_RIGHT<"W") echo "disabled" ?> type="submit" class="adm-btn-green" name="Sendform" value="<?=Loc::getMessage("MLIFESS_SENDFORM_SEND")?>" />
+	<input <?phpif ($MODULE_RIGHT<"W") echo "disabled" ?> type="submit" class="adm-btn-green" name="Sendform" value="<?=Loc::getMessage("MLIFESS_SENDFORM_SEND")?>" />
 	<input type="hidden" name="Send" value="Y" />
-<?$tabControl->End();
+<?php$tabControl->End();
 ?>
 </form>
-<?
+<?php
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");
 ?>

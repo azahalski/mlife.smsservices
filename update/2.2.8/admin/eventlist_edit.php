@@ -29,7 +29,7 @@ global $USER;
 $isAdmin = $USER->CanDoOperation('lpa_template_edit');
 $isUserHavePhpAccess = $USER->CanDoOperation('edit_php');
 ?>
-<?
+<?php
 $aTabs = array(
   array("DIV" => "edit1", "TAB" => Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM"), "ICON"=>"main_user_edit", "TITLE"=>Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM")),
 );
@@ -44,9 +44,9 @@ $TEMPLATE = '';
 $TEMPLATE_PRE = trim($_REQUEST["TEMPLATE"]);
 
 global $USER;
-if (stripos($TEMPLATE_PRE, '<?') !== false && !$USER->CanDoOperation('edit_php')) {
+if (stripos($TEMPLATE_PRE, '<?php') !== false && !$USER->CanDoOperation('edit_php')) {
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');
-}elseif(stripos($TEMPLATE_PRE, '<?') !== false && !\Mlife\Smsservices\Events::isPhpCodeSafe($TEMPLATE_PRE)){
+}elseif(stripos($TEMPLATE_PRE, '<?php') !== false && !\Mlife\Smsservices\Events::isPhpCodeSafe($TEMPLATE_PRE)){
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP2');
 }
 $TEMPLATE = $TEMPLATE_PRE;
@@ -171,7 +171,7 @@ if($ID>0)
 }
 
 ?>
-<?
+<?php
 $APPLICATION->SetTitle(($ID>0? Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_EDIT")." ID = ".$ID : Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_ADD")));
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
 
@@ -199,27 +199,27 @@ if(count($errorAr)>0){
 $eventDefault = false;
 
 ?>
-<?if($bVarsShowForm){?>
+<?phpif($bVarsShowForm){?>
 
-<form method="POST" Action="<?echo $APPLICATION->GetCurPage()?>" ENCTYPE="multipart/form-data" name="post_form">
-<?echo bitrix_sessid_post();?>
+<form method="POST" Action="<?phpecho $APPLICATION->GetCurPage()?>" ENCTYPE="multipart/form-data" name="post_form">
+<?phpecho bitrix_sessid_post();?>
 <input type="hidden" name="lang" value="<?=LANG?>">
 <input type="hidden" name="ID" value="<?=$ID?>">
-<?if($str_EVENT){?><input type="hidden" name="EVENT" value="<?=$str_EVENT?>"><?}?>
-<?
+<?phpif($str_EVENT){?><input type="hidden" name="EVENT" value="<?=$str_EVENT?>"><?php}?>
+<?php
 $tabControl->Begin();
 ?>
-<?
+<?php
 $tabControl->BeginNextTab();
 ?>
-<?if(!$str_EVENT){?>
+<?phpif(!$str_EVENT){?>
 <tr>
 	<td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT")?></td>
 	<td width="60%">
 		<select id="EVENT" name="EVENT" onchange="this.form.submit();">
 		<option value=""><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT_DEF")?></option>
-		<?foreach($eventList as $name=>$ev){?>
-		<?
+		<?phpforeach($eventList as $name=>$ev){?>
+		<?php
 		if(is_array($ev['BX_EVENT'])){
 		$cn = true;
 			foreach($ev['BX_EVENT'] as $cl){
@@ -232,46 +232,46 @@ $tabControl->BeginNextTab();
 		if(!$cn) continue;
 		?>
 		<option value="<?=$name?>">[<?=$name?>] <?=$ev['NAME']?></option>
-		<?}?>
+		<?php}?>
 		</select>
 	</td>
 </tr>
-<?}else{?>
+<?php}else{?>
 <tr>
 	<td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT")?></td>
 	<td width="60%">
-		<?foreach($eventList as $name=>$ev){?>
-		<?if($str_EVENT == $name){
+		<?phpforeach($eventList as $name=>$ev){?>
+		<?phpif($str_EVENT == $name){
 		$eventDefault = $ev;
 		?>
 		<b><?=$ev['NAME']?> [<?=$str_EVENT?>]</b>
-		<?
+		<?php
 		break;
 		}?>
-		<?}?>
+		<?php}?>
 		
 	</td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_NAME")?></td>
 <td width="60%">
-	<?if(!$str_NAME) $str_NAME = $eventDefault['NAME'];?>
+	<?phpif(!$str_NAME) $str_NAME = $eventDefault['NAME'];?>
 	<input type="text" name="NAME" value="<?=htmlspecialcharsEx($str_NAME)?>"/>
 </td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_ACTIVE")?></td>
 <td width="60%">
-	<input type="checkbox" name="ACTIVE" value="Y"<?if($str_ACTIVE == "Y") echo " checked"?>/>
+	<input type="checkbox" name="ACTIVE" value="Y"<?phpif($str_ACTIVE == "Y") echo " checked"?>/>
 </td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_SITE_ID")?></td>
 <td width="60%">
 	<select name="SITE_ID" ID="SITE_ID">
-		<?foreach($arSites as $siteid=>$sitename){?>
-		<option value="<?=$siteid?>"<?if($str_SITE_ID == $siteid) echo " selected"?>><?=$sitename?></option>
-		<?}?>
+		<?phpforeach($arSites as $siteid=>$sitename){?>
+		<option value="<?=$siteid?>"<?phpif($str_SITE_ID == $siteid) echo " selected"?>><?=$sitename?></option>
+		<?php}?>
 	</select>
 </td>
 </tr>
@@ -285,7 +285,7 @@ $tabControl->BeginNextTab();
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_TEMPLATE")?></td>
 <td width="60%">
-	<?CFileMan::AddHTMLEditorFrame(
+	<?phpCFileMan::AddHTMLEditorFrame(
 		"TEMPLATE",
 		$str_TEMPLATE,
 		"BODY_TYPE",
@@ -313,18 +313,18 @@ $tabControl->BeginNextTab();
 </td>
 </tr>
 
-<?if($eventDefault){
+<?phpif($eventDefault){
 ?>
 <tr class="heading"><td colspan="2"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_TITLE")?></td></tr>
-<?
+<?php
 if (is_callable($eventDefault['FIELD']['HTML'][0], $eventDefault['FIELD']['HTML'][1])){
 echo call_user_func(array($eventDefault['FIELD']['HTML'][0], $eventDefault['FIELD']['HTML'][1]), $str_PARAMS);
 }
 ?>
-<?}?>
+<?php}?>
 
-<?}?>
-<?
+<?php}?>
+<?php
 $tabControl->Buttons(
   array(
     "disabled"=>($POST_RIGHT<"W"),
@@ -334,13 +334,13 @@ $tabControl->Buttons(
 );
 ?>
 <input type="hidden" name="lang" value="<?=LANG?>">
-<?
+<?php
 $tabControl->End();
 ?>
 
-<?
+<?php
 $tabControl->ShowWarnings("post_form", $message);
 ?>
 
-<?}?>
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");?>
+<?php}?>
+<?phprequire($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");?>
