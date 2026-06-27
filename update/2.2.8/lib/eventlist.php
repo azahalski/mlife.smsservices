@@ -127,6 +127,40 @@ class EventlistTable extends Entity\DataManager
                         }
                     ];
 				},
+                //пишем хеши в .settings модуля, чтобы исключить подмену шаблона в базе через sql injection
+                'save_data_modification' => function(){
+                    return [ function ($value) {
+                        $confOb = Configuration::getInstance('mlife.smsservices');
+                        $existingSettings = $confOb->get('template_hashes');
+
+                        //установка новых значений
+                        if (!is_array($existingSettings)) $existingSettings = [];
+                        if(!in_array(md5($existingSettings), $existingSettings)) {
+                            $existingSettings[] = md5($existingSettings);
+                        }
+                        $confOb->add('template_hashes', $existingSettings);
+
+                        //запись значений
+                        $moduleConfigPath = getLocalPath("modules/mlife.smsservices/.settings.php");
+                        if ($moduleConfigPath) {
+                            $path = preg_replace(
+                                "'[\\\\/]+'",
+                                "/",
+                                \Bitrix\Main\Loader::getDocumentRoot() . $moduleConfigPath
+                            );
+
+                            if (file_exists($path)) {
+                                $dataTmp = include($path);
+                                $data = is_array($dataTmp) ? $dataTmp : [];
+                                $data['template_hashes'] = ['value' => $confOb->get('template_hashes'), 'readonly' => 0];
+                                $data = var_export($data, true);
+                                if (!is_writable($path))
+                                    @chmod($path, 0644);
+                                file_put_contents($path, "<" . "?php\nreturn " . $data . ";\n");
+                            }
+                        }
+                    }];
+                },
             ])
         ];
 	}
