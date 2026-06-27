@@ -230,7 +230,7 @@ class Main {
 				}
 
                 global $USER;
-                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?php ') !== false) {
+                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?') !== false) {
                     if(!\Mlife\Smsservices\Events::isPhpCodeSafe($arData['TEMPLATE'])){
                         unset($arData['TEMPLATE']);
                     }
