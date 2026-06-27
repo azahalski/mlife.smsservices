@@ -16,21 +16,21 @@ $APPLICATION->SetAdditionalCSS("/bitrix/css/mlife.smsservices/style.css");
 $smsServices = new \Mlife\Smsservices\Sender();
 $arrBalance = $smsServices->getBalance();
 ?>
-<?phpforeach($arrBalance as $key=>$val){?>
-<?phpif($val){?>
+<?php foreach($arrBalance as $key=>$val){?>
+<?php if($val){?>
 <div class="balance">
 <div class="titleTransport"><?=Loc::getMessage("MLIFESS_BALANCE_TRANSPORT_".ToUpper($key))?></div>
 <?php
 if($val->error) {
 ?>
 <?=Loc::getMessage("MLIFESS_BALANCE_ERR_".$val->error_code)?> (<?=$val->error?>)
-<?php}else{?>
+<?php }else{?>
 <?=Loc::getMessage("MLIFESS_BALANCE_OST")?>: <strong><?=$val->balance?></strong>
 
-<?php}?>
+<?php }?>
 </div>
-<?php}?>
-<?php}?>
+<?php }?>
+<?php }?>
 
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");

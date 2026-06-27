@@ -44,9 +44,9 @@ $TEMPLATE = '';
 $TEMPLATE_PRE = trim($_REQUEST["TEMPLATE"]);
 
 global $USER;
-if (stripos($TEMPLATE_PRE, '<?php') !== false && !$USER->CanDoOperation('edit_php')) {
+if (stripos($TEMPLATE_PRE, '<?php ') !== false && !$USER->CanDoOperation('edit_php')) {
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');
-}elseif(stripos($TEMPLATE_PRE, '<?php') !== false && !\Mlife\Smsservices\Events::isPhpCodeSafe($TEMPLATE_PRE)){
+}elseif(stripos($TEMPLATE_PRE, '<?php ') !== false && !\Mlife\Smsservices\Events::isPhpCodeSafe($TEMPLATE_PRE)){
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP2');
 }
 $TEMPLATE = $TEMPLATE_PRE;
@@ -199,26 +199,26 @@ if(count($errorAr)>0){
 $eventDefault = false;
 
 ?>
-<?phpif($bVarsShowForm){?>
+<?php if($bVarsShowForm){?>
 
-<form method="POST" Action="<?phpecho $APPLICATION->GetCurPage()?>" ENCTYPE="multipart/form-data" name="post_form">
-<?phpecho bitrix_sessid_post();?>
+<form method="POST" Action="<?php echo $APPLICATION->GetCurPage()?>" ENCTYPE="multipart/form-data" name="post_form">
+<?php echo bitrix_sessid_post();?>
 <input type="hidden" name="lang" value="<?=LANG?>">
 <input type="hidden" name="ID" value="<?=$ID?>">
-<?phpif($str_EVENT){?><input type="hidden" name="EVENT" value="<?=$str_EVENT?>"><?php}?>
+<?php if($str_EVENT){?><input type="hidden" name="EVENT" value="<?=$str_EVENT?>"><?php }?>
 <?php
 $tabControl->Begin();
 ?>
 <?php
 $tabControl->BeginNextTab();
 ?>
-<?phpif(!$str_EVENT){?>
+<?php if(!$str_EVENT){?>
 <tr>
 	<td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT")?></td>
 	<td width="60%">
 		<select id="EVENT" name="EVENT" onchange="this.form.submit();">
 		<option value=""><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT_DEF")?></option>
-		<?phpforeach($eventList as $name=>$ev){?>
+		<?php foreach($eventList as $name=>$ev){?>
 		<?php
 		if(is_array($ev['BX_EVENT'])){
 		$cn = true;
@@ -232,46 +232,46 @@ $tabControl->BeginNextTab();
 		if(!$cn) continue;
 		?>
 		<option value="<?=$name?>">[<?=$name?>] <?=$ev['NAME']?></option>
-		<?php}?>
+		<?php }?>
 		</select>
 	</td>
 </tr>
-<?php}else{?>
+<?php }else{?>
 <tr>
 	<td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT")?></td>
 	<td width="60%">
-		<?phpforeach($eventList as $name=>$ev){?>
-		<?phpif($str_EVENT == $name){
+		<?php foreach($eventList as $name=>$ev){?>
+		<?php if($str_EVENT == $name){
 		$eventDefault = $ev;
 		?>
 		<b><?=$ev['NAME']?> [<?=$str_EVENT?>]</b>
 		<?php
 		break;
 		}?>
-		<?php}?>
+		<?php }?>
 		
 	</td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_NAME")?></td>
 <td width="60%">
-	<?phpif(!$str_NAME) $str_NAME = $eventDefault['NAME'];?>
+	<?php if(!$str_NAME) $str_NAME = $eventDefault['NAME'];?>
 	<input type="text" name="NAME" value="<?=htmlspecialcharsEx($str_NAME)?>"/>
 </td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_ACTIVE")?></td>
 <td width="60%">
-	<input type="checkbox" name="ACTIVE" value="Y"<?phpif($str_ACTIVE == "Y") echo " checked"?>/>
+	<input type="checkbox" name="ACTIVE" value="Y"<?php if($str_ACTIVE == "Y") echo " checked"?>/>
 </td>
 </tr>
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_SITE_ID")?></td>
 <td width="60%">
 	<select name="SITE_ID" ID="SITE_ID">
-		<?phpforeach($arSites as $siteid=>$sitename){?>
-		<option value="<?=$siteid?>"<?phpif($str_SITE_ID == $siteid) echo " selected"?>><?=$sitename?></option>
-		<?php}?>
+		<?php foreach($arSites as $siteid=>$sitename){?>
+		<option value="<?=$siteid?>"<?php if($str_SITE_ID == $siteid) echo " selected"?>><?=$sitename?></option>
+		<?php }?>
 	</select>
 </td>
 </tr>
@@ -285,7 +285,7 @@ $tabControl->BeginNextTab();
 <tr>
 <td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_TEMPLATE")?></td>
 <td width="60%">
-	<?phpCFileMan::AddHTMLEditorFrame(
+	<?php CFileMan::AddHTMLEditorFrame(
 		"TEMPLATE",
 		$str_TEMPLATE,
 		"BODY_TYPE",
@@ -313,7 +313,7 @@ $tabControl->BeginNextTab();
 </td>
 </tr>
 
-<?phpif($eventDefault){
+<?php if($eventDefault){
 ?>
 <tr class="heading"><td colspan="2"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_TITLE")?></td></tr>
 <?php
@@ -321,9 +321,9 @@ if (is_callable($eventDefault['FIELD']['HTML'][0], $eventDefault['FIELD']['HTML'
 echo call_user_func(array($eventDefault['FIELD']['HTML'][0], $eventDefault['FIELD']['HTML'][1]), $str_PARAMS);
 }
 ?>
-<?php}?>
+<?php }?>
 
-<?php}?>
+<?php }?>
 <?php
 $tabControl->Buttons(
   array(
@@ -342,5 +342,5 @@ $tabControl->End();
 $tabControl->ShowWarnings("post_form", $message);
 ?>
 
-<?php}?>
-<?phprequire($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");?>
+<?php }?>
+<?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");?>
