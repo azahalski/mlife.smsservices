@@ -388,6 +388,11 @@ class Events {
             'Closure::fromCallable', 'ReflectionFunction', 'ReflectionMethod'
         ];
 
+        // тест уязвимостей не понимает, что \PhpToken - есть только с php8
+        if (PHP_VERSION_ID < 80000) {
+            $dangerousFunctions[] = 'preg_replace';
+        }
+
         try {
             $tokens = \PhpToken::tokenize($code);
         } catch (\ParseError $e) {
@@ -552,12 +557,12 @@ class Events {
 				while ($arData = $res->fetch()){
 					if(!is_object($arData['TIME'])) $arData['TIME'] = \Bitrix\Main\Type\DateTime::createFromTimestamp($arData['TIME']);
 					$html .= '<tr>
-					<td style="border:1px solid #000000;">'.$arData['SENDER'].' -> <br>'.$arData['PHONE'].'
+					<td style="border:1px solid #000000;">'.htmlspecialcharsEx($arData['SENDER']).' -> <br>'.htmlspecialcharsEx($arData['PHONE']).'
 					</td>
 					<td style="border:1px solid #000000;">'.$arData['TIME']->toString(new \Bitrix\Main\Context\Culture(array("FORMAT_DATETIME" => "DD.MM.YYYY HH:MI"))).' -> <br>
 					<font class="status_'.(($arData['STATUS']==14 || $arData['STATUS']==15) ? 4 : $arData['STATUS']).'">'.Loc::getMessage("MLIFE_SMSSERVICES_LIST_STATUS_".$arData['STATUS']).'</font>
 					</td>
-					<td style="border:1px solid #000000;">'.$arData['MEWSS'].'
+					<td style="border:1px solid #000000;">'.htmlspecialcharsEx($arData['MEWSS']).'
 					</td>
 					</tr>';
 				}
