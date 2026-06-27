@@ -424,6 +424,8 @@ class Events {
             // Блокируем обратные кавычки `ls`
             if ($token->text === '`') return false;
 
+            if ($token->id === T_CLASS) return false;
+
             // Очищаем токен от ведущего слеша (\eval -> eval) для надежной проверки черного списка
             $cleanTokenTextLower = ltrim(strtolower($token->text), '\\');
             if (in_array($cleanTokenTextLower, $hardBlacklist, true)) return false;
@@ -500,42 +502,99 @@ class Events {
 
     /**
      * Блокирует передачу потенциальных callable (строк, переменных, массивов)
-     * в качестве аргументов для функций высшего порядка.
+     * в качестве аргументов на ВСЕХ уровнях вложенности, кроме тел анонимных функций.
      */
     private static function validateCallbackArgumentsOnly(array $tokens, int $openBracketIndex): bool {
         $bracketCount = 1;
         $i = $openBracketIndex + 1;
         $total = count($tokens);
 
+        // Токены строк, включая Heredoc и Nowdoc
+        $stringTokenIds = [
+            T_CONSTANT_ENCAPSED_STRING,
+            defined('T_START_HEREDOC') ? T_START_HEREDOC : -1,
+            defined('T_ENCAPSED_AND_WHITESPACE') ? T_ENCAPSED_AND_WHITESPACE : -1
+        ];
+
         while ($i < $total && $bracketCount > 0) {
             $t = $tokens[$i];
+
+            // 1. Пропускаем анонимные функции function() { ... } и fn() => ...
+            // Их содержимое валидируется основным циклом isPhpCodeSafe, здесь их дублировать не нужно
+            if ($t->id === T_FUNCTION || $t->id === T_FN) {
+                $i = self::skipAnonymousFunction($tokens, $i, $total);
+                continue;
+            }
 
             if ($t->text === '(') $bracketCount++;
             if ($t->text === ')') $bracketCount--;
 
-            // Если мы всё ещё находимся на первом уровне аргументов текущей функции
-            if ($bracketCount === 1 && $t->text !== ',') {
+            // Если мы вышли из исходных скобок функции высшего порядка
+            if ($bracketCount === 0) {
+                break;
+            }
 
-                // 1. Запрещаем переменные: array_map($func, ...) или array_map($var, ...)
-                if ($t->id === T_VARIABLE) {
-                    return false;
-                }
+            // Запятые верхнего уровня пропускаем, остальное внутри скобок тщательно инспектируем
+            if ($t->text === ',') {
+                $i++;
+                continue;
+            }
 
-                // 2. Запрещаем любые строки (в кавычках): array_map('system', ...) или array_map("my_func", ...)
-                if ($t->id === T_CONSTANT_ENCAPSED_STRING) {
-                    return false;
-                }
+            // КРИТИЧЕСКИЙ СДВИГ: Проверка работает на ВСЕХ уровнях ($bracketCount >= 1)
 
-                // 3. Запрещаем массивы: array_map(['Class', 'method'], ...)
-                // Токены могут быть '[' или старый синтаксис T_ARRAY
-                if ($t->text === '[' || $t->id === T_ARRAY) {
-                    return false;
-                }
+            // 1. Запрещаем любые переменные на любом уровне вложенности аргументов
+            if ($t->id === T_VARIABLE) {
+                return false;
+            }
+
+            // 2. Запрещаем любые строки (включая конкатенированные и Heredoc/Nowdoc)
+            if (in_array($t->id, $stringTokenIds, true)) {
+                return false;
+            }
+
+            // 3. Запрещаем массивы (как новые [], так и старые array())
+            if ($t->text === '[' || $t->id === T_ARRAY) {
+                return false;
             }
 
             $i++;
         }
         return true;
+    }
+
+    /**
+     * Вспомогательный метод: безопасно перематывает указатель парсера за пределы
+     * объявления и тела анонимной/стрелочной функции, чтобы избежать ложных срабатываний.
+     */
+    private static function skipAnonymousFunction(array $tokens, int $startIndex, int $total): int {
+        $i = $startIndex + 1;
+        $braceCount = 0;
+        $inBody = false;
+
+        while ($i < $total) {
+            $t = $tokens[$i];
+
+            // Для классических function() { ... } отслеживаем фигурные скобки
+            if ($t->text === '{') {
+                $braceCount++;
+                $inBody = true;
+            }
+            if ($t->text === '}') {
+                $braceCount--;
+                if ($inBody && $braceCount === 0) {
+                    return $i + 1; // Возвращаем индекс СРАЗУ ПОСЛЕ закрытия тела функции
+                }
+            }
+
+            // Для стрелочных функций fn() => выражение заканчивается на запятой или закрывающей скобке аргументов
+            // Если фигурных скобок нет, и мы встретили конец аргумента во внешней функции
+            if (!$inBody && ($t->text === ',' || $t->text === ')')) {
+                return $i; // Возвращаем индекс текущего разделителя, чтобы внешний цикл обработал скобку/запятую
+            }
+
+            $i++;
+        }
+        return $i;
     }
 
     private static function getPreviousNonSpaceToken(array $tokens, int $currentIndex): ?\PhpToken {
