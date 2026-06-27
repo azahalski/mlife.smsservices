@@ -106,7 +106,24 @@ class EventlistTable extends Entity\DataManager
 				'required' => false,
 				'validation' => function(){
 					return [
-						new Entity\Validator\Length(null, 2500),
+                        // 1. Стандартный валидатор длины строки
+                        new Entity\Validator\Length(null, 2500),
+
+                        // 2. Кастомный валидатор на PHP-код и символ #
+                        new class extends Entity\Validator\Base {
+                            public function validate($value, $primary, array $row, Entity\Field $field)
+                            {
+                                // Проверяем наличие символа #
+                                if (stripos($value, '<?') !== false && strpos($value, '#') !== false) {
+                                    return new Entity\Validator\Error(
+                                        'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
+                                        'HASH_SYMBOL_DENIED'
+                                    );
+                                }
+
+                                return true;
+                            }
+                        }
                     ];
 				},
             ])
