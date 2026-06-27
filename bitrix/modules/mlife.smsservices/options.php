@@ -205,13 +205,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_LOGIN")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "login", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="login"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="login"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_PASSW")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "passw", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="passw"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="passw"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTP")?>:</td>
@@ -224,7 +224,7 @@ $tabControl->BeginNextTab();
 			</select>
 		<?php } else {
 		$val = \Bitrix\Main\Config\Option::get($module_id, "sender", ".","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="sender">
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="sender">
 		<?php }?>
 		</td>
 	</tr>
@@ -238,13 +238,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTPCACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cacheotp", "86400","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cacheotp"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cacheotp"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_BALANCECACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cachebalance", "3600","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cachebalance"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cachebalance"></td>
 	</tr>
 
 	<tr class="heading"><td colspan="2"><?=Loc::getMessage("MLIFESS_OPT_SHLUZ_RESERVE")?></td></tr>
@@ -276,13 +276,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_LOGIN")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "login_r", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="login_r"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="login_r"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_PASSW")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "passw_r", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="passw_r"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="passw_r"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTP")?>:</td>
@@ -295,7 +295,7 @@ $tabControl->BeginNextTab();
 			</select>
 		<?php } else {
 		$val = \Bitrix\Main\Config\Option::get($module_id, "sender_r", ".","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="sender_r">
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="sender_r">
 		<?php }?>
 		</td>
 	</tr>
@@ -309,13 +309,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTPCACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cacheotp_r", "86400","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cacheotp_r"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cacheotp_r"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_BALANCECACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cachebalance_r", "3600","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cachebalance_r"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cachebalance_r"></td>
 	</tr>
 	
 	
@@ -351,13 +351,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_LOGIN")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "login_app", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="login_app"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="login_app"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_PASSW")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "passw_app", "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="passw_app"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="passw_app"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTP")?>:</td>
@@ -370,7 +370,7 @@ $tabControl->BeginNextTab();
 			</select>
 		<?php } else {
 		$val = \Bitrix\Main\Config\Option::get($module_id, "sender_app", ".","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="sender_app">
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="sender_app">
 		<?php }?>
 		</td>
 	</tr>
@@ -384,13 +384,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_OTPCACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cacheotp_app", "86400","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cacheotp_app"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cacheotp_app"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_BALANCECACHE")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "cachebalance_app", "3600","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="cachebalance_app"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="cachebalance_app"></td>
 	</tr>
 	
 	
@@ -412,13 +412,13 @@ $tabControl->BeginNextTab();
 		<td><?=Loc::getMessage("MLIFESS_OPT_LIMITSMS")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "limitsms", "10","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="limitsms"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="limitsms"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_LIMITSMS2")?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "limittimesms", "600","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="limittimesms"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="limittimesms"></td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_OPT_TRANSLIT")?>:</td>
@@ -449,15 +449,15 @@ foreach($arSites as $siteId=>$siteName){
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_PHONEADMIN")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "admin_phone_".$siteId."_".$persid, "","");?>
-			<input type="text" size="35" maxlength="255" value="<?=$val?>" name="admin_phone_<?=$siteId?>_<?=$persid?>"></td>
+			<input type="text" size="35" maxlength="255" value="<?=htmlspecialcharsBack($val)?>" name="admin_phone_<?=$siteId?>_<?=$persid?>"></td>
 		</td>
 	</tr>
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_IM_PROP_MACROS")?>:</td>
 		<td>
-		<?php foreach($arMakros[$persid] as $macros=>$nacrosName){
+		<?php foreach($arMakros[$persid] as $macros=>$macrosName){
 			?>
-			#<?=$macros?># - <?=$nacrosName?>; 
+			#<?=$macros?># - <?=$macrosName?>;
 			<?php
 		}?>
 		</td>
@@ -480,56 +480,56 @@ foreach($arSites as $siteId=>$siteName){
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_OTMY")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_cancelY_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_cancelY_<?=$persid?>" id="mess_status_<?=$siteId?>_cancelY_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_cancelY_<?=$persid?>" id="mess_status_<?=$siteId?>_cancelY_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_OTMN")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_cancelN_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_cancelN_<?=$persid?>" id="mess_status_<?=$siteId?>_cancelN_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_cancelN_<?=$persid?>" id="mess_status_<?=$siteId?>_cancelN_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_DOSTY")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_deliveryY_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_deliveryY_<?=$persid?>" id="mess_status_<?=$siteId?>_deliveryY_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_deliveryY_<?=$persid?>" id="mess_status_<?=$siteId?>_deliveryY_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_DOSTN")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_deliveryN_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_deliveryN_<?=$persid?>" id="mess_status_<?=$siteId?>_deliveryN_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_deliveryN_<?=$persid?>" id="mess_status_<?=$siteId?>_deliveryN_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_OPLY")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_payY_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_payY_<?=$persid?>" id="mess_status_<?=$siteId?>_payY_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_payY_<?=$persid?>" id="mess_status_<?=$siteId?>_payY_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_OPLN")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_payN_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_payN_<?=$persid?>" id="mess_status_<?=$siteId?>_payN_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_payN_<?=$persid?>" id="mess_status_<?=$siteId?>_payN_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_NEW")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_new_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_new_<?=$persid?>" id="mess_status_<?=$siteId?>_new_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_new_<?=$persid?>" id="mess_status_<?=$siteId?>_new_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<tr>
 		<td style="width:50%;"><?=Loc::getMessage("MLIFESS_IM_PROP_STATUS_NEWADMIN")?>, <?=Loc::getMessage("MLIFESS_IM_PROP_DLYA")?> <?=$persName?>:</td>
 		<td>
 			<?php $val = \Bitrix\Main\Config\Option::get($module_id, "mess_status_".$siteId."_new2_".$persid, "","");?>
-			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_new2_<?=$persid?>" id="mess_status_<?=$siteId?>_new2_<?=$persid?>"><?=$val?></textarea>
+			<textarea style="width:90%;" name="mess_status_<?=$siteId?>_new2_<?=$persid?>" id="mess_status_<?=$siteId?>_new2_<?=$persid?>"><?=htmlspecialcharsBack($val)?></textarea>
 		</td>
 	</tr>
 	<?php
