@@ -556,6 +556,7 @@ class Events {
     public static function executePhp($template, &$macros, &$arParams)
 	{
         if(self::isPhpCodeSafe($template)){
+            //проверяем хеш шаблона, чтобы запретить подмену шаблонов прямыми запросами в базу
             $confOb = Configuration::getInstance('mlife.smsservices');
             $existingSettings = $confOb->get('template_hashes');
             if(in_array(md5($template), $existingSettings)){
