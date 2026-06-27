@@ -83,15 +83,15 @@ $aTabs = array(
 $tabControl = new \CAdminTabControl("tabControl", $aTabs);
 $tabControl->Begin();
 ?>
-<form method="POST" action="<?phpecho $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
+<form method="POST" action="<?php echo $APPLICATION->GetCurPage()?>?lang=<?=LANGUAGE_ID?>&event=<?=htmlspecialcharsEx($_REQUEST['event'])?>" id="FORMACTION">
     <?=bitrix_sessid_post()?>
     <?php
 $tabControl->BeginNextTab();
 ?>
 	
-	<?phpif($_REQUEST['event']){?>
+	<?php if($_REQUEST['event']){?>
 	<tr><td colspan="2" style="text-align:center;font-weight:bold;"><?=Loc::getMessage("MLIFESS_SENDFORM_ORDER")?> <?=htmlspecialcharsEx($_REQUEST['event'])?><br/><br/></td></tr>
-	<?php}?>
+	<?php }?>
 	<?php
 	if($orderId){
 	
@@ -115,9 +115,9 @@ $tabControl->BeginNextTab();
 				foreach($senderOptions as $sender){
 				$cn++;
 				?>
-				<option value="<?=$sender->sender?>"<?phpif($sender->sender == $current){?> selected="selected"<?php}?>><?=$sender->sender?></option>
+				<option value="<?=$sender->sender?>"<?php if($sender->sender == $current){?> selected="selected"<?php }?>><?=$sender->sender?></option>
 
-				<?php}
+				<?php }
 				if($cn == 0) {
 				?>
 				<option value="<?=$current?>" selected="selected"><?=$current?></option>
@@ -125,7 +125,7 @@ $tabControl->BeginNextTab();
 				}
 				?>
 			</select>
-			<?php}else{
+			<?php }else{
 			?>
 			<input type="text" size="28" maxlength="255" value="<?=htmlspecialcharsEx($current)?>" name="sender" autocomplete="off">
 			<?php
@@ -150,7 +150,7 @@ $tabControl->BeginNextTab();
 	<tr>
 		<td><?=Loc::getMessage("MLIFESS_SENDFORM_DATE")?>:</td>
 		<td>
-			<?phpecho \CalendarDate("datesend", $_REQUEST['datesend'], "datesend", "25", "class=\"date\"")?>
+			<?php echo \CalendarDate("datesend", $_REQUEST['datesend'], "datesend", "25", "class=\"date\"")?>
 		</td>
 	</tr>
 	<tr>
@@ -168,9 +168,9 @@ $tabControl->BeginNextTab();
 	<?php
 $tabControl->Buttons();
 ?>
-	<input <?phpif ($MODULE_RIGHT<"W") echo "disabled" ?> type="submit" class="adm-btn-green" name="Sendform" value="<?=Loc::getMessage("MLIFESS_SENDFORM_SEND")?>" />
+	<input <?php if ($MODULE_RIGHT<"W") echo "disabled" ?> type="submit" class="adm-btn-green" name="Sendform" value="<?=Loc::getMessage("MLIFESS_SENDFORM_SEND")?>" />
 	<input type="hidden" name="Send" value="Y" />
-<?php$tabControl->End();
+<?php $tabControl->End();
 ?>
 </form>
 <?php
