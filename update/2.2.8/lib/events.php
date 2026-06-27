@@ -370,7 +370,10 @@ class Events {
 
         // 2. Опасные системные функции (прямой вызов)
         $dangerousFunctions = ['exec', 'system', 'passthru', 'shell_exec', 'proc_open', 'popen', 'pcntl_exec',
-            'file_put_contents', 'file_get_contents', 'unlink', 'mkdir', 'mail', 'extract', 'create_function', 'base64_decode', 'base64_encode'
+            'file_put_contents', 'file_get_contents', 'unlink', 'mkdir', 'mail', 'extract', 'create_function', 'base64_decode', 'base64_encode',
+            'fopen', 'fwrite', 'fread', 'fgets', 'rename', 'copy', 'rmdir', 'chmod', 'chown', 'touch',
+            'link', 'symlink', 'ini_set', 'ini_get', 'set_time_limit', 'header', 'setcookie', 'parse_ini_file', 'error_reporting',
+            'move_uploaded_file', 'tmpfile'
         ];
 
         // 3. Полный список функций PHP, принимающих callable-аргументы
