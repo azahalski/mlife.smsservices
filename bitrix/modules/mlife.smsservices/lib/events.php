@@ -369,7 +369,9 @@ class Events {
         $hardBlacklist = ['eval', 'assert', 'include', 'include_once', 'require', 'require_once', 'constant'];
 
         // 2. Опасные системные функции (прямой вызов)
-        $dangerousFunctions = ['exec', 'system', 'passthru', 'shell_exec', 'proc_open', 'popen', 'pcntl_exec'];
+        $dangerousFunctions = ['exec', 'system', 'passthru', 'shell_exec', 'proc_open', 'popen', 'pcntl_exec',
+            'file_put_contents', 'file_get_contents', 'unlink', 'mkdir', 'mail', 'extract', 'create_function', 'base64_decode', 'base64_encode'
+        ];
 
         // 3. Полный список функций PHP, принимающих callable-аргументы
         $callbackFunctions = [
