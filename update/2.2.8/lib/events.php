@@ -1,6 +1,8 @@
 <?php
 namespace Mlife\Smsservices;
 
+
+use Bitrix\Main\Config\Configuration;
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
@@ -394,7 +396,7 @@ class Events {
             'call_user_func', 'call_user_func_array', 'forward_static_call', 'forward_static_call_array',
             'register_shutdown_function', 'register_tick_function', 'set_error_handler', 'set_exception_handler',
             'ob_start', 'preg_replace_callback', 'preg_replace_callback_array', 'spl_autoload_register',
-            'Closure::fromCallable', 'ReflectionFunction', 'ReflectionMethod'
+            'closure::fromcallable', 'reflectionfunction', 'reflectionmethod' // приведены к нижнему регистру для in_array
         ];
 
         // тест уязвимостей не понимает, что \PhpToken - есть только с php8
@@ -408,35 +410,80 @@ class Events {
             return false; // Код с синтаксическими ошибками блокируем
         }
 
+        // Идентификаторы токенов для имен функций/классов в PHP 8+
+        $nameTokenIds = [
+            T_STRING,
+            defined('T_NAME_FULLY_QUALIFIED') ? T_NAME_FULLY_QUALIFIED : -1,
+            defined('T_NAME_QUALIFIED') ? T_NAME_QUALIFIED : -1,
+            defined('T_NAME_RELATIVE') ? T_NAME_RELATIVE : -1
+        ];
+
         foreach ($tokens as $index => $token) {
             if ($token->isIgnorable()) continue;
 
             // Блокируем обратные кавычки `ls`
             if ($token->text === '`') return false;
-            //if ($token->id === T_NEW) return false;
 
-            $tokenTextLower = strtolower($token->text);
+            // Очищаем токен от ведущего слеша (\eval -> eval) для надежной проверки черного списка
+            $cleanTokenTextLower = ltrim(strtolower($token->text), '\\');
+            if (in_array($cleanTokenTextLower, $hardBlacklist, true)) return false;
 
-            // Проверка базового черного списка
-            if (in_array($tokenTextLower, $hardBlacklist, true)) return false;
-
-            // Если встречаем вызов функции
+            // Если встречаем вызов функции, инициализацию класса или вызов метода
             if ($token->text === '(') {
                 $prevToken = self::getPreviousNonSpaceToken($tokens, $index);
 
                 if ($prevToken !== null) {
-                    // Вызов по имени: name()
-                    if ($prevToken->id === T_STRING) {
-                        $calledFuncName = strtolower($prevToken->text);
 
-                        // Прямой вызов системной функции
+                    // Проверяем вызовы по имени (используем $nameTokenIds вместо только T_STRING)
+                    if (in_array($prevToken->id, $nameTokenIds, true)) {
+
+                        // Нормализуем имя (\system -> system, \ReflectionFunction -> reflectionfunction)
+                        $calledFuncName = ltrim(strtolower($prevToken->text), '\\');
+
+                        // 1. Проверяем, не было ли перед этим именем конструкции "new" (для ReflectionFunction и т.д.)
+                        $beforeNameToken = self::getPreviousNonSpaceToken($tokens, $tokens[$index]->id === T_STRING ? $index - 1 : $index - 1); // ищем токен перед именем
+
+                        // Для надежности найдем токен именно перед $prevToken
+                        for ($p = $index - 1; $p >= 0; $p--) {
+                            if ($tokens[$p]->pos < $prevToken->pos && !$tokens[$p]->isIgnorable()) {
+                                if ($tokens[$p]->id === T_NEW) {
+                                    // Если это создание объекта, проверяем, не опасный ли класс-коллбэк создается
+                                    if (in_array($calledFuncName, ['reflectionfunction', 'reflectionmethod'], true)) {
+                                        if (!self::validateCallbackArgumentsOnly($tokens, $index)) {
+                                            return false;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+
+                        // 2. Прямой вызов системной функции
                         if (in_array($calledFuncName, $dangerousFunctions, true)) return false;
 
-                        // ЗАКРЫВАЕМ CALLABLE В АРГУМЕНТАХ:
-                        // Если вызывается функция из списка callback-функций, инспектируем её скобки
+                        // 3. ЗАКРЫВАЕМ CALLABLE В АРГУМЕНТАХ:
                         if (in_array($calledFuncName, $callbackFunctions, true)) {
                             if (!self::validateCallbackArgumentsOnly($tokens, $index)) {
                                 return false;
+                            }
+                        }
+                    }
+
+                    // 4. Проверка статических вызовов вроде Closure::fromCallable()
+                    // Если перед скобкой стоит имя метода (T_STRING), а перед ним двоеточие (T_DOUBLE_COLON)
+                    if ($prevToken->id === T_STRING && $index >= 3) {
+                        $doubleColonToken = self::getPreviousNonSpaceToken($tokens, $index - 1);
+                        if ($doubleColonToken !== null && $doubleColonToken->text === '::') {
+                            $classToken = self::getPreviousNonSpaceToken($tokens, $doubleColonToken->pos > 0 ? $index - 2 : 0);
+
+                            // Собираем полное выражение: "closure::fromcallable"
+                            if ($classToken !== null && in_array($classToken->id, $nameTokenIds, true)) {
+                                $fullStaticCall = ltrim(strtolower($classToken->text), '\\') . '::' . strtolower($prevToken->text);
+                                if (in_array($fullStaticCall, $callbackFunctions, true)) {
+                                    if (!self::validateCallbackArgumentsOnly($tokens, $index)) {
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -509,8 +556,12 @@ class Events {
     public static function executePhp($template, &$macros, &$arParams)
 	{
         if(self::isPhpCodeSafe($template)){
-            $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');
-            return $result;
+            $confOb = Configuration::getInstance('mlife.smsservices');
+            $existingSettings = $confOb->get('template_hashes');
+            if(in_array(md5($template), $existingSettings)){
+                $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');
+                return $result;
+            }
         }
         return $template;
 	}
@@ -526,14 +577,14 @@ class Events {
             $vClean = str_replace('?>', '', $vClean);
 
             // 3. УДАЛЯЕМ знак доллара (запрет вызова переменных)
-            if (stripos($template, '<?php ') !== false)
+            if (stripos($template, '<?') !== false)
                 $vClean = str_replace('$', '', $vClean);
             $v = $vClean;
         }
         unset($v);
 
         // ПРОВЕРКА: Вызываем executePhp только при наличии PHP-кода в шаблоне
-        if (stripos($template, '<?php ') !== false) {
+        if (stripos($template, '<?') !== false) {
             /* для совместимости со старыми версиями, будет удалено в следующих версиях
             вместо макросов в php нужно использовать переменные в $arParams
             */

@@ -3,6 +3,7 @@ namespace Mlife\Smsservices;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Config\Configuration;
 Loc::loadMessages(__FILE__);
 
 class EventlistTable extends Entity\DataManager
@@ -114,7 +115,7 @@ class EventlistTable extends Entity\DataManager
                             public function validate($value, $primary, array $row, Entity\Field $field)
                             {
                                 // Проверяем наличие символа #
-                                if (stripos($value, '<?php ') !== false && strpos($value, '#') !== false) {
+                                if (stripos($value, '<?') !== false && strpos($value, '#') !== false) {
                                     return new \Bitrix\Main\Entity\FieldError(
                                         $field,
                                         'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
@@ -130,18 +131,25 @@ class EventlistTable extends Entity\DataManager
                 //пишем хеши в .settings модуля, чтобы исключить подмену шаблона в базе через sql injection
                 'save_data_modification' => function(){
                     return [ function ($value) {
+
+                        if(stripos($value, '<?') === false) return $value;
+
                         $confOb = Configuration::getInstance('mlife.smsservices');
                         $existingSettings = $confOb->get('template_hashes');
 
+                        $hash = md5($value);
+
                         //установка новых значений
                         if (!is_array($existingSettings)) $existingSettings = [];
-                        if(!in_array(md5($existingSettings), $existingSettings)) {
-                            $existingSettings[] = md5($existingSettings);
+                        if(!in_array($hash, $existingSettings)) {
+                            $existingSettings[] = $hash;
                         }
+
                         $confOb->add('template_hashes', $existingSettings);
 
                         //запись значений
                         $moduleConfigPath = getLocalPath("modules/mlife.smsservices/.settings.php");
+
                         if ($moduleConfigPath) {
                             $path = preg_replace(
                                 "'[\\\\/]+'",
@@ -159,6 +167,8 @@ class EventlistTable extends Entity\DataManager
                                 file_put_contents($path, "<" . "?php\nreturn " . $data . ";\n");
                             }
                         }
+
+                        return $value;
                     }];
                 },
             ])
