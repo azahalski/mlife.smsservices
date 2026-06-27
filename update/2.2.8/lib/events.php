@@ -365,6 +365,15 @@ class Events {
 	}
 
     public static function isPhpCodeSafe(string $code): bool {
+
+        /* отключать на свой страх и риск */
+        /* несмотря на то, что у юзера с правами edit_php есть возможность поменять любой код,
+        тесты уязвимостей дуреют и повышают приоритет RCE до high,
+        даже если атакующий будет дополнительно использовать sql injection в других модулях (который наверняка будет заблокирован проактивной защитой),
+        то быстрее повысить привилегии пользователя, залезть в b_agent и т.д. чем править шаблон
+        */
+        //return false;
+
         // 1. Конструкции, запрещенные ВСЕГДА
         $hardBlacklist = ['eval', 'assert', 'include', 'include_once', 'require', 'require_once', 'constant', 'goto'];
 
@@ -404,7 +413,7 @@ class Events {
 
             // Блокируем обратные кавычки `ls`
             if ($token->text === '`') return false;
-            if ($token->id === T_NEW) return false;
+            //if ($token->id === T_NEW) return false;
 
             $tokenTextLower = strtolower($token->text);
 
@@ -489,7 +498,15 @@ class Events {
         return null;
     }
 
-	public static function executePhp($template,&$macros,&$arParams)
+    /**
+     * выполняет php код шаблона записанного пользователем с правами edit_php
+     *
+     * @param $template
+     * @param $macros
+     * @param $arParams
+     * @return mixed
+     */
+    public static function executePhp($template, &$macros, &$arParams)
 	{
         if(self::isPhpCodeSafe($template)){
             $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<? return ob_get_clean();');
@@ -501,8 +518,8 @@ class Events {
     public static function compileTemplate($template, &$macros){
         $arParams = array();
         foreach($macros as $k=>&$v){
-            if(is_array($v)) continue;
             $arParams[str_replace("#","",$k)] = $v;
+            if(is_array($v)) continue;
 
             // 2. УДАЛЯЕМ теги <?php
             $vClean = preg_replace('/<\?(php)?/i', '', $v);
@@ -517,7 +534,9 @@ class Events {
 
         // ПРОВЕРКА: Вызываем executePhp только при наличии PHP-кода в шаблоне
         if (stripos($template, '<?') !== false) {
-            // для совместимости со старыми версиями, вместо макросов в php лучше использовать $arParams
+            /* для совместимости со старыми версиями, будет удалено в следующих версиях
+            вместо макросов в php нужно использовать переменные в $arParams
+            */
             $template = str_replace(array_keys($macros), $macros, $template);
             $template = self::executePhp($template, $macros, $arParams);
         }else{
