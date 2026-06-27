@@ -364,55 +364,82 @@ class Events {
 		
 	}
 
-    /**
-     * Проверяет PHP-код на наличие запрещенных функций и конструкций.
-     *
-     * @param string $code Строка с PHP-кодом
-     * @return bool True если код безопасен, False если обнаружены нарушения
-     */
-    public static function isPhpCodeSafe($code) {
-        // Список запрещенных функций (всегда в нижнем регистре)
-        $blackList = array(
-            'exec', 'system', 'passthru', 'shell_exec', 'eval', 'assert',
-            'proc_open', 'popen', 'pcntl_exec', 'create_function',
-            'include', 'include_once', 'require', 'require_once' // Опционально: запрет подключения файлов
-        );
+    public static function isPhpCodeSafe(string $code): bool {
+        // 1. Полный список абсолютно запрещенных конструкций
+        $hardBlacklist = ['eval', 'assert', 'include', 'include_once', 'require', 'require_once'];
 
-        // Разбиваем строку на токены PHP
-        $tokens = token_get_all($code);
+        // 2. Список ОПАСНЫХ функций, которые нельзя вызывать ни при каких условиях
+        $forbiddenFunctions = ['exec', 'system', 'passthru', 'shell_exec', 'proc_open', 'popen', 'pcntl_exec'];
 
-        foreach ($tokens as $token) {
-            // Если это массив, значит это распознанный элемент PHP (переменная, функция, строка)
-            if (is_array($token)) {
-                $tokenType = $token[0];
-                $tokenValue = strtolower(trim($token[1]));
+        try {
+            $tokens = \PhpToken::tokenize($code);
+        } catch (\ParseError $e) {
+            return false; // Код с синтаксической ошибкой блокируем
+        }
 
-                // 1. Блокируем вызовы запрещенных функций по их именам
-                if ($tokenType === T_STRING && in_array($tokenValue, $blackList)) {
-                    return false;
-                }
+        foreach ($tokens as $index => $token) {
+            // Игнорируем пробелы и комментарии
+            if ($token->isIgnorable()) {
+                continue;
+            }
 
-                // 2. Блокируем языковую конструкцию eval (у нее свой отдельный токен)
-                if ($tokenType === T_EVAL) {
-                    return false;
-                }
+            // Блокируем обратные кавычки `ls`
+            if ($token->text === '`') {
+                return false;
+            }
 
-                // 3. Блокируем динамические вызовы функций через переменные (например: $func = 'system'; $func();)
-                // Запрещаем вызов функции, имя которой хранится в переменной
-                if ($tokenType === T_VARIABLE) {
-                    // Если вам не нужны переменные-функции, этот пункт защитит от обхода фильтров
-                }
+            // Блокируем жесткий черный список (eval, include и т.д.)
+            if (in_array(strtolower($token->text), $hardBlacklist, true)) {
+                return false;
+            }
 
-            } else {
-                // Если это одиночный символ (строка)
-                // Блокируем выполнение через обратные кавычки ( `ls -la` )
-                if ($token === '`') {
-                    return false;
+            // Ищем потенциальный вызов функции: любой токен, за которым идет открывающая скобка "("
+            if ($token->text === '(') {
+                // Нам нужно посмотреть, ЧТО стоит перед этой скобкой
+                $prevToken = self::getPreviousNonSpaceToken($tokens, $index);
+
+                if ($prevToken !== null) {
+                    // Ситуация 1: Обычный вызов функции по имени, например: system()
+                    if ($prevToken->id === T_STRING) {
+                        $funcName = strtolower($prevToken->text);
+                        if (in_array($funcName, $forbiddenFunctions, true)) {
+                            return false;
+                        }
+                    }
+
+                    // Ситуация 2: Переменная-функция, например: $f()
+                    // БЛОКИРУЕМ: вызов переменной как функции запрещен
+                    if ($prevToken->id === T_VARIABLE) {
+                        return false;
+                    }
+
+                    // Ситуация 3: Конкатенация или строка-функция, например: ('sys'.'tem')() или ('system')()
+                    // БЛОКИРУЕМ: вызов выражения или закрывающей скобки как функции
+                    if ($prevToken->text === ')' || $prevToken->id === T_CONSTANT_ENCAPSED_STRING) {
+                        return false;
+                    }
+
+                    // Ситуация 4: Динамический вызов через массив, например: [$obj, $method]()
+                    if ($prevToken->text === ']') {
+                        return false;
+                    }
                 }
             }
         }
 
         return true;
+    }
+
+    /**
+     * Вспомогательный метод для поиска предыдущего значимого токена
+     */
+    private static function getPreviousNonSpaceToken(array $tokens, int $currentIndex): ?\PhpToken {
+        for ($i = $currentIndex - 1; $i >= 0; $i--) {
+            if (!$tokens[$i]->isIgnorable()) {
+                return $tokens[$i];
+            }
+        }
+        return null;
     }
 
 	public static function executePhp($template,&$macros,&$arParams)

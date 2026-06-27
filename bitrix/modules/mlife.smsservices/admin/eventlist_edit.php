@@ -148,14 +148,15 @@ if($ID>0)
 	$dataAr = \Mlife\Smsservices\EventlistTable::getRowById($ID);
 	
 	if(is_array($dataAr)){
-		$str_SITE_ID = $dataAr['SITE_ID'];
-		$str_SENDER = $dataAr['SENDER'];
-		$str_EVENT = $dataAr['EVENT'];
-		$str_TEMPLATE = $dataAr['TEMPLATE'];
-		$str_PARAMS = $dataAr['PARAMS'];
-		$str_ACTIVE = $dataAr['ACTIVE'];
-		$str_NAME = $dataAr['NAME'];
-		
+        if(empty($errorAr)) {
+            $str_SITE_ID = $dataAr['SITE_ID'];
+            $str_SENDER = $dataAr['SENDER'];
+            $str_EVENT = $dataAr['EVENT'];
+            $str_TEMPLATE = $dataAr['TEMPLATE'];
+            $str_PARAMS = $dataAr['PARAMS'];
+            $str_ACTIVE = $dataAr['ACTIVE'];
+            $str_NAME = $dataAr['NAME'];
+        }
 		$bVarsFromForm = true;
 		
 	}else{
