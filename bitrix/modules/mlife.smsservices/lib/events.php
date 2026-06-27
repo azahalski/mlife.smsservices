@@ -556,13 +556,8 @@ class Events {
     public static function executePhp($template, &$macros, &$arParams)
 	{
         if(self::isPhpCodeSafe($template)){
-            //проверяем хеш шаблона, чтобы запретить подмену шаблонов прямыми запросами в базу
-            $confOb = Configuration::getInstance('mlife.smsservices');
-            $existingSettings = $confOb->get('template_hashes');
-            if(in_array(md5($template), $existingSettings)){
-                $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');
-                return $result;
-            }
+            $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');
+            return $result;
         }
         return $template;
 	}
@@ -589,8 +584,16 @@ class Events {
             /* для совместимости со старыми версиями, будет удалено в следующих версиях
             вместо макросов в php нужно использовать переменные в $arParams
             */
-            $template = str_replace(array_keys($macros), $macros, $template);
-            $template = self::executePhp($template, $macros, $arParams);
+
+            //проверяем хеш шаблона, чтобы исключить подмену шаблона прямыми запросами в базу
+            $confOb = Configuration::getInstance('mlife.smsservices');
+            $existingSettings = $confOb->get('template_hashes');
+            if(in_array(md5($template), $existingSettings)){
+                $template = str_replace(array_keys($macros), $macros, $template);
+                $template = self::executePhp($template, $macros, $arParams);
+            }else{
+                $template = '';
+            }
         }else{
             $template = str_replace(array_keys($macros), $macros, $template);
         }
