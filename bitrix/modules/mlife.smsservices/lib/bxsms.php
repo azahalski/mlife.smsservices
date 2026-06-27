@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Mlife\Smsservices;
 
 use Bitrix\Main\Error;

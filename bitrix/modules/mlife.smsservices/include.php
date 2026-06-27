@@ -1,4 +1,4 @@
-<?
+<?php
 //старый метод для отправки смс
 class CMlifeSmsServices {
 	

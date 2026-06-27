@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["MLIFESS_OPT_TITLE"] = "Смс сервисы";
 $MESS["MLIFESS_OPT_TAB1"] = "Настройки смс-шлюза";
 $MESS["MLIFESS_OPT_TAB2"] = "Доступ к модулю";

@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["MLIFESS_SENDFORM_TITLE"] = "Отправка смс";
 $MESS["MLIFESS_SENDFORM_ERR_REQ"] = "Не заполнены обязательные поля";
 $MESS["MLIFESS_SENDFORM_NOTICE_SEND"] = "Сообщение отправлено";

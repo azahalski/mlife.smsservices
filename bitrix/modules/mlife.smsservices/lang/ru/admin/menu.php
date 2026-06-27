@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["MLIFESS_MENU_MODULE_NAME"] = "Смс сервисы";
 $MESS["MLIFESS_MENU_MODULE_DESC"] = "Модуль для смс оповещений";
 $MESS["MLIFESS_MENU_SENSMS"] = "Отправить смс";

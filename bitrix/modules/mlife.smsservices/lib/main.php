@@ -230,7 +230,7 @@ class Main {
 				}
 
                 global $USER;
-                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?') !== false) {
+                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?php') !== false) {
                     if(!\Mlife\Smsservices\Events::isPhpCodeSafe($arData['TEMPLATE'])){
                         unset($arData['TEMPLATE']);
                     }
@@ -410,9 +410,9 @@ class Main {
 		  $this->getParam("TABLEID")."_filter", $title
 		);
 		?>
-		<form name="find_form" method="get" action="<?echo $GLOBALS["APPLICATION"]->GetCurPage();?>">
-		<?$oFilter->Begin();?>
-		<?
+		<form name="find_form" method="get" action="<?phpecho $GLOBALS["APPLICATION"]->GetCurPage();?>">
+		<?php$oFilter->Begin();?>
+		<?php
 		$key = -1;
 		foreach($arFields as $group=>$val){
 		$key++;
@@ -420,7 +420,7 @@ class Main {
 			<tr>
 			  <td><?=$title[$key]?>:</td>
 			  <td>
-				<?foreach($val as $field){
+				<?phpforeach($val as $field){
 					$type = false;
 					if(is_array($field)){
 						$val_n = $field["NAME"];
@@ -442,12 +442,12 @@ class Main {
 					global ${$row};
 					if($type=="INT"){
 						?>
-						<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
-						<?
+						<input type="text" name="<?=$row?>" value="<?phpecho htmlspecialcharsbx(${$row})?>">
+						<?php
 					}elseif($type=="STRING"){
 						?>
-						<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
-						<?
+						<input type="text" name="<?=$row?>" value="<?phpecho htmlspecialcharsbx(${$row})?>">
+						<?php
 					}elseif($type=="BOOL"){
 						if(is_array($field["VALUES"])){
 							$values = $field["VALUES"];
@@ -464,8 +464,8 @@ class Main {
 							);
 						}
 						?>
-						<?echo SelectBoxFromArray($row, $values, ${$row}, Loc::getMessage("MLIFE_ADMIN_LIST_SELECT_EMPTY"), "");?>
-						<?
+						<?phpecho SelectBoxFromArray($row, $values, ${$row}, Loc::getMessage("MLIFE_ADMIN_LIST_SELECT_EMPTY"), "");?>
+						<?php
 					}elseif($type=="LIST"){
 						$values = array();
 						if(is_array($field["VALUES"])){
@@ -474,23 +474,23 @@ class Main {
 							//TODO - добавить получение полей списка с описания сущности
 						}
 					?>
-						<?echo SelectBoxFromArray($row, $values, ${$row}, Loc::getMessage("MLIFE_ADMIN_LIST_SELECT_EMPTY"), "");?>
-					<?
+						<?phpecho SelectBoxFromArray($row, $values, ${$row}, Loc::getMessage("MLIFE_ADMIN_LIST_SELECT_EMPTY"), "");?>
+					<?php
 					}elseif($type=="CALENDAR"){
 					?>
-					<input type="text" name="<?=$row?>" value="<?echo htmlspecialcharsbx(${$row})?>">
-					<?
+					<input type="text" name="<?=$row?>" value="<?phpecho htmlspecialcharsbx(${$row})?>">
+					<?php
 					}
 				}?>
 			  </td>
 			</tr>
-		<?}?>
-		<?
+		<?php}?>
+		<?php
 		$oFilter->Buttons(array("table_id"=>$this->getParam("TABLEID"),"url"=>$GLOBALS["APPLICATION"]->GetCurPage(),"form"=>"find_form"));
 		$oFilter->End();
 		?>
 		</form>
-		<?
+		<?php
 		
 	}
 	

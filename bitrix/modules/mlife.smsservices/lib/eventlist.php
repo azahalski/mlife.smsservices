@@ -114,7 +114,7 @@ class EventlistTable extends Entity\DataManager
                             public function validate($value, $primary, array $row, Entity\Field $field)
                             {
                                 // Проверяем наличие символа #
-                                if (stripos($value, '<?') !== false && strpos($value, '#') !== false) {
+                                if (stripos($value, '<?php') !== false && strpos($value, '#') !== false) {
                                     return new Entity\Validator\Error(
                                         'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
                                         'HASH_SYMBOL_DENIED'

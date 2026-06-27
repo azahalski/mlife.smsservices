@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["MLIFESS_LIST_TITLE"] = "История сообщений";
 $MESS["MLIFESS_LIST_ERR_1"] = "Ошибка в параметрах";
 $MESS["MLIFESS_LIST_ERR_2"] = "Неверный логин или пароль";

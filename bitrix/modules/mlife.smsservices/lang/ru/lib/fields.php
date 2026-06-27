@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS['MLIFE_SMSSERVICES_FIELDS_TO'] = 'Получатель смс';
 $MESS['MLIFE_SMSSERVICES_FIELDS_APPSMS'] = 'App сообщение';
 $MESS['MLIFE_SMSSERVICES_FIELDS_STATUS_TO'] = 'Текущий статус';

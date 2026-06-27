@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["MLIFESS_BALANCE_TITLE"] = "Остаток на счету";
 $MESS["MLIFESS_BALANCE_ERR"] = "Не удалось получить баланс с сервиса. Ошибка";
 $MESS["MLIFESS_BALANCE_ERR_1"] = "Ошибка в параметрах";

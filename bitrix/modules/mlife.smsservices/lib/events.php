@@ -509,7 +509,7 @@ class Events {
     public static function executePhp($template, &$macros, &$arParams)
 	{
         if(self::isPhpCodeSafe($template)){
-            $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<? return ob_get_clean();');
+            $result = eval('use \Bitrix\Main\Mail\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');
             return $result;
         }
         return $template;
@@ -526,14 +526,14 @@ class Events {
             $vClean = str_replace('?>', '', $vClean);
 
             // 3. УДАЛЯЕМ знак доллара (запрет вызова переменных)
-            if (stripos($template, '<?') !== false)
+            if (stripos($template, '<?php') !== false)
                 $vClean = str_replace('$', '', $vClean);
             $v = $vClean;
         }
         unset($v);
 
         // ПРОВЕРКА: Вызываем executePhp только при наличии PHP-кода в шаблоне
-        if (stripos($template, '<?') !== false) {
+        if (stripos($template, '<?php') !== false) {
             /* для совместимости со старыми версиями, будет удалено в следующих версиях
             вместо макросов в php нужно использовать переменные в $arParams
             */
