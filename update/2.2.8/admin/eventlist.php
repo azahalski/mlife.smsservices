@@ -22,7 +22,7 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 	public function getMlifeRowListAdminCustomRow($row){
 		
 		$row->AddViewField("SENDER", ($row->arRes['SENDER']) ? htmlspecialcharsEx($row->arRes['SENDER']) : \Bitrix\Main\Config\Option::get("mlife.smsservices","sender","",""));
-		$row->AddViewField("TEMPLATE", '<font style="font-size:12px;">'.htmlspecialcharsEx($row->arRes['TEMPLATE']).'</font>');
+		$row->AddViewField("TEMPLATE", '<pre style="font-size:10px;line-height:12px;padding:0;margin:0;">'.htmlspecialcharsEx($row->arRes['TEMPLATE']).'</pre>');
 		$row->AddCheckField("ACTIVE");
 		
 		$params = $row->arRes['PARAMS'];
@@ -30,7 +30,7 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 		foreach($params as $name=>$val){
 			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';
 		}
-		$row->AddViewField("PARAMS", '<font style="font-size:12px;">'.$html.'</font>');
+		$row->AddViewField("PARAMS", '<pre style="font-size:10px;line-height:12px;padding:0;margin:0;">'.$html.'</pre>');
 		$row->AddInputField("NAME", array("size"=>20));
 		$row->AddInputField("SENDER", array("size"=>20));
 		
