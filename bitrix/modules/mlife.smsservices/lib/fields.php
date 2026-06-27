@@ -28,7 +28,7 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
 		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
@@ -48,7 +48,7 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_RESET_PASSWORD");
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
 		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
@@ -79,7 +79,7 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
 		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
 		$html .= '</tr>';
@@ -125,7 +125,7 @@ class Fields {
 		
 		$macros = '';
 		$MCR_EXT = self::getOrderCodes(Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_NEWORDER"));
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($MCR_EXT).'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$MCR_EXT.'</td></tr><tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
 		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
@@ -225,7 +225,7 @@ class Fields {
 			$arAllType[$dt['EVENT_NAME']] = '['.$dt['EVENT_NAME'].'] - '.$dt['NAME'];
 		}
 		
-		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.htmlspecialcharsEx($defaultMactosText).'<br>*'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_BXEVENT_NOTE").'</td></tr><tr>';
+		$html = '<tr><td>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS").'</td><td>'.$defaultMactosText.'<br>*'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_MACROS_BXEVENT_NOTE").'</td></tr><tr>';
 		
 		$html .= '<td><b>'.Loc::getMessage("MLIFE_SMSSERVICES_FIELDS_TO").'</b></td>';
 		$html .= '<td><input type="text" name="PARAMS_PHONE" value="'.htmlspecialcharsEx($data['PHONE']).'"/></td>';
