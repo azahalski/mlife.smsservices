@@ -41,14 +41,15 @@ $bVarsFromForm = false;
 $bVarsShowForm = true;
 
 $TEMPLATE = '';
-$TEMPLATE_PRE = trim($_REQUEST['TEMPLATE'] ?? '');
+$TEMPLATE_PRE = trim($_REQUEST["TEMPLATE"]);
 
 global $USER;
 if (stripos($TEMPLATE_PRE, '<?') !== false && !$USER->CanDoOperation('edit_php')) {
     $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP');
-}else{
-    $TEMPLATE = $TEMPLATE_PRE;
+}elseif(stripos($TEMPLATE_PRE, '<?') !== false && !\Mlife\Smsservices\Events::isPhpCodeSafe($TEMPLATE_PRE)){
+    $errorAr[] = Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_PARAM_ERR_PHP2');
 }
+$TEMPLATE = $TEMPLATE_PRE;
 
 if($REQUEST_METHOD == "POST" && ($save!="" || $apply!="") && $POST_RIGHT=="W" && check_bitrix_sessid() && empty($errorAr)){
 	

@@ -230,8 +230,13 @@ class Main {
 				}
 
                 global $USER;
-                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?') !== false && !$USER->CanDoOperation('edit_php')) {
-                    unset($arData['TEMPLATE']);
+                if (isset($arData['TEMPLATE']) && stripos($arData['TEMPLATE'], '<?') !== false) {
+                    if(!\Mlife\Smsservices\Events::isPhpCodeSafe($arData['TEMPLATE'])){
+                        unset($arData['TEMPLATE']);
+                    }
+                    if(!$USER->CanDoOperation('edit_php')){
+                        unset($arData['TEMPLATE']);
+                    }
                 }
 
 				
