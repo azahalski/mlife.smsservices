@@ -115,7 +115,8 @@ class EventlistTable extends Entity\DataManager
                             {
                                 // Проверяем наличие символа #
                                 if (stripos($value, '<?php ') !== false && strpos($value, '#') !== false) {
-                                    return new Entity\Validator\Error(
+                                    return new \Bitrix\Main\Entity\FieldError(
+                                        $field,
                                         'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
                                         'HASH_SYMBOL_DENIED'
                                     );
