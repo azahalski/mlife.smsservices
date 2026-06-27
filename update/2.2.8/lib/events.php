@@ -366,7 +366,7 @@ class Events {
 
     public static function isPhpCodeSafe(string $code): bool {
         // 1. Конструкции, запрещенные ВСЕГДА
-        $hardBlacklist = ['eval', 'assert', 'include', 'include_once', 'require', 'require_once', 'constant'];
+        $hardBlacklist = ['eval', 'assert', 'include', 'include_once', 'require', 'require_once', 'constant', 'goto'];
 
         // 2. Опасные системные функции (прямой вызов)
         $dangerousFunctions = ['exec', 'system', 'passthru', 'shell_exec', 'proc_open', 'popen', 'pcntl_exec',
@@ -382,7 +382,8 @@ class Events {
             'usort', 'uasort', 'uksort', 'array_diff_uassoc', 'array_diff_ukey', 'array_intersect_ukey',
             'call_user_func', 'call_user_func_array', 'forward_static_call', 'forward_static_call_array',
             'register_shutdown_function', 'register_tick_function', 'set_error_handler', 'set_exception_handler',
-            'ob_start', 'preg_replace_callback', 'preg_replace_callback_array', 'spl_autoload_register'
+            'ob_start', 'preg_replace_callback', 'preg_replace_callback_array', 'spl_autoload_register',
+            'Closure::fromCallable', 'ReflectionFunction', 'ReflectionMethod'
         ];
 
         try {
@@ -396,6 +397,7 @@ class Events {
 
             // Блокируем обратные кавычки `ls`
             if ($token->text === '`') return false;
+            if ($token->id === T_NEW) return false;
 
             $tokenTextLower = strtolower($token->text);
 
