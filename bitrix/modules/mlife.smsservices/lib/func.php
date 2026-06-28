@@ -12,7 +12,7 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 class Func {
-	
+
 	public static function getSelect($id,$options,$curValue,$refresh=false,$url=false,$optcode=false){
 		
 		$html = '<select id="'.$id.'" name="'.$id.'" ';

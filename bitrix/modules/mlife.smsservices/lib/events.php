@@ -519,6 +519,8 @@ class Events {
         while ($i < $total && $bracketCount > 0) {
             $t = $tokens[$i];
 
+            if ($t->id === T_STRING && !self::isFollowedByParen($tokens, $i)) { return false; }
+
             // 1. Пропускаем анонимные функции function() { ... } и fn() => ...
             // Их содержимое валидируется основным циклом isPhpCodeSafe, здесь их дублировать не нужно
             if ($t->id === T_FUNCTION || $t->id === T_FN) {
