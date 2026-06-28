@@ -67,7 +67,7 @@ class Fields {
 			"PHONE"=>trim($_REQUEST['PARAMS_PHONE']),
 			"APPSMS"=>trim($_REQUEST['PARAMS_APPSMS']),
 		);
-        $arFields = \Bitrix\Main\Web\Json::decode($PARAMS);
+        $arFields['PARAMS'] = \Bitrix\Main\Web\Json::decode($PARAMS);
 		
 		return $arFields;
 	}
@@ -113,7 +113,7 @@ class Fields {
 			"APPSMS"=>trim($_REQUEST['PARAMS_APPSMS']),
 			"PAYED"=>trim($_REQUEST['PARAMS_PAYED']),
 		);
-        $arFields = \Bitrix\Main\Web\Json::decode($PARAMS);
+        $arFields['PARAMS'] = \Bitrix\Main\Web\Json::decode($PARAMS);
 		
 		return $arFields;
 	}
@@ -177,7 +177,7 @@ class Fields {
 			"STATUS_FROM"=>trim($_REQUEST['PARAMS_STATUS_FROM']),
 			"STATUS_TO"=>trim($_REQUEST['PARAMS_STATUS_TO'])
 		);
-        $arFields = \Bitrix\Main\Web\Json::decode($PARAMS);
+        $arFields['PARAMS'] = \Bitrix\Main\Web\Json::decode($PARAMS);
 		
 		return $arFields;
 	}
