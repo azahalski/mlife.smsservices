@@ -35,6 +35,7 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
         }
 		
 		$params = $row->arRes['PARAMS'];
+        print_r($params);
 		$html = '';
 		foreach($params as $name=>$val){
 			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';

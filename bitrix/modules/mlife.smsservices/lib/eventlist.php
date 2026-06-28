@@ -8,6 +8,7 @@ Loc::loadMessages(__FILE__);
 
 class EventlistTable extends Entity\DataManager
 {
+    public static $prevHash = '';
 	public static $oldId = null;
 	
 	public static function getFilePath()
@@ -93,7 +94,7 @@ class EventlistTable extends Entity\DataManager
                             return $value;
                         }
                     ];
-                }
+                    }
             ]),
             new Entity\StringField('ACTIVE', [
                     'required' => false,
@@ -115,7 +116,7 @@ class EventlistTable extends Entity\DataManager
                             public function validate($value, $primary, array $row, Entity\Field $field)
                             {
                                 // Проверяем наличие символа #
-                                if (stripos($value, '<?') !== false && strpos($value, '#') !== false) {
+                                if (stripos($value, '<?') !== false && stripos($value, '#') !== false) {
                                     return new \Bitrix\Main\Entity\FieldError(
                                         $field,
                                         'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
@@ -141,6 +142,16 @@ class EventlistTable extends Entity\DataManager
 
                         //установка новых значений
                         if (!is_array($existingSettings)) $existingSettings = [];
+
+                        $existingSettingsOld = $existingSettings;
+                        if(self::$prevHash){
+                            $existingSettings = [];
+                            foreach($existingSettingsOld as $v){
+                                if($v == self::$prevHash) continue;
+                                $existingSettings[] = $v;
+                            }
+                        }
+
                         if(!in_array($hash, $existingSettings)) {
                             $existingSettings[] = $hash;
                         }
@@ -184,7 +195,15 @@ class EventlistTable extends Entity\DataManager
 		$params = $event->getParameter('fields');
 		\Mlife\Smsservices\EventlistTable::addEvent($params['EVENT']);
 	}
-	
+
+    public static function onBeforeUpdate(\Bitrix\Main\Entity\Event $event){
+        $fields = $event->getParameter('fields');
+        self::$prevHash = '';
+        if($fields['TEMPLATE']){
+            self::$prevHash = md5($fields['TEMPLATE']);
+        }
+    }
+
 	public static function onBeforeDelete(\Bitrix\Main\Entity\Event $event){
 		$params = $event->getParameter('id');
 		if($params['ID']){
