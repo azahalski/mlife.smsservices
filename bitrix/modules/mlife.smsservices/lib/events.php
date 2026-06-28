@@ -229,6 +229,7 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
+                    $arData['PARAMS'] = \Bitrix\Main\Web\Json::decode($arData['PARAMS']);
 					if($arData['PARAMS']['PHONE']){
 						$arData['TEMPLATE'] = self::compileTemplate($arData['TEMPLATE'], $arMakros);
 						$phoneAr = str_replace(array_keys($arMakros), $arMakros, $arData['PARAMS']['PHONE']);
@@ -271,7 +272,7 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
-					
+                    $arData['PARAMS'] = \Bitrix\Main\Web\Json::decode($arData['PARAMS']);
 					$right = false;
 					
 					if($arData['PARAMS']['STATUS_FROM'] == 'ALL') {
@@ -327,8 +328,9 @@ class Events {
 					)
 				);
 				while($arData = $res->fetch()){
-					
+                    $arData['PARAMS'] = \Bitrix\Main\Web\Json::decode($arData['PARAMS']);
 					$right = false;
+
 					if($arOrderFields['PAYED'] == $arData['PARAMS']['PAYED']) $right = true;
 					
 					if($arData['PARAMS']['PHONE'] && $right){
@@ -657,9 +659,9 @@ class Events {
                     'SEVERITY' => 'ERROR',
                     'AUDIT_TYPE_ID' => 'MLIFE_SMSSERVISES',
                     'MODULE_ID' => 'mlife.smsservices',
-                    'DESCRIPTION' => ''
+                    'DESCRIPTION' => 'Шаблон не выполнился: '.htmlspecialcharsEx($template)
                 ]);
-                $template = 'Шаблон не выполнился: '.htmlspecialcharsEx($template);
+                $template = '';
             }
         }else{
             $template = str_replace(array_keys($macros), $macros, $template);
@@ -739,8 +741,7 @@ class Events {
 			)
 		);
 		while($arData = $res->fetch()){
-
-			
+            $arData['PARAMS'] = \Bitrix\Main\Web\Json::decode($arData['PARAMS']);
 			$right = false;
 			
 			$r_site = \Bitrix\Main\Mail\Internal\EventMessageSiteTable::getList(array(

@@ -108,7 +108,7 @@ $tabControl->BeginNextTab();
 		<td>
 			<?php
 			$current = ($_REQUEST['sender']) ? trim($_REQUEST['sender']) : \Bitrix\Main\Config\Option::get($module_id, "sender", "","");
-			if(!$senderOptions->error && count($senderOptions)>1 && false){?>
+			if(!$senderOptions->error && false && count($senderOptions)>1){?>
 			<select name="sender" id="sender">
 				<?php
 				$cn = 0;
