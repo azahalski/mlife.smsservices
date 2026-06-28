@@ -33,9 +33,13 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
                 $this->getAdminList()->AddFilterError(Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_LIST_TEMPLATE_ERR', ['#ID#'=>$row->arRes['ID']]));
             }
         }
-		
-		$params = $row->arRes['PARAMS'];
-        print_r($params);
+
+        try{
+            $params = \Bitrix\Main\Web\Json::decode($row->arRes['PARAMS']);
+        }catch (\Exception $e){
+            $params = [];
+        }
+        if(!is_array($params)) $params = [];
 		$html = '';
 		foreach($params as $name=>$val){
 			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';
