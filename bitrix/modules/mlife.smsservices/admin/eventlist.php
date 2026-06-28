@@ -24,13 +24,12 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 	public function getMlifeRowListAdminCustomRow($row){
 		
 		$row->AddViewField("SENDER", ($row->arRes['SENDER']) ? htmlspecialcharsEx($row->arRes['SENDER']) : \Bitrix\Main\Config\Option::get("mlife.smsservices","sender","",""));
-		$row->AddViewField("TEMPLATE", '<pre style="font-size:10px;line-height:12px;padding:0;margin:0;">'.htmlspecialcharsEx($row->arRes['TEMPLATE']).'</pre>');
+		$row->AddViewField("TEMPLATE", '<pre style="font-size:10px;line-height:12px;padding:0;margin:0;">'.$row->arRes['TEMPLATE'].'</pre>');
 		$row->AddCheckField("ACTIVE");
-        if(stripos($row->arRes['TEMPLATE'], '<?') !== false){
+        if(stripos(htmlspecialcharsBack($row->arRes['TEMPLATE']), '<?') !== false){
             $confOb = Configuration::getInstance('mlife.smsservices');
             $existingSettings = $confOb->get('template_hashes');
-            if(!in_array(md5($row->arRes['TEMPLATE']), $existingSettings)){
-                //$row->AddViewField("ACTIVE", '<b style="color;red;">'.Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_LIST_TEMPLATE_ERR').'</b>');
+            if(!in_array(md5(htmlspecialcharsBack($row->arRes['TEMPLATE'])), $existingSettings)){
                 $this->getAdminList()->AddFilterError(Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_LIST_TEMPLATE_ERR', ['#ID#'=>$row->arRes['ID']]));
             }
         }
