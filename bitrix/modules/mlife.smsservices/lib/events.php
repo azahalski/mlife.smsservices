@@ -653,7 +653,13 @@ class Events {
                 $template = str_replace(array_keys($macros), $macros, $template);
                 $template = self::executePhp($template, $macros, $arParams);
             }else{
-                $template = '';
+                \CEventLog::Add([
+                    'SEVERITY' => 'ERROR',
+                    'AUDIT_TYPE_ID' => 'MLIFE_SMSSERVISES',
+                    'MODULE_ID' => 'mlife.smsservices',
+                    'DESCRIPTION' => ''
+                ]);
+                $template = 'Шаблон не выполнился: '.htmlspecialcharsEx($template);
             }
         }else{
             $template = str_replace(array_keys($macros), $macros, $template);
