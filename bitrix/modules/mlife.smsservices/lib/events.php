@@ -651,7 +651,7 @@ class Events {
             //проверяем хеш шаблона, чтобы исключить подмену шаблона прямыми запросами в базу
             $confOb = Configuration::getInstance('mlife.smsservices');
             $existingSettings = $confOb->get('template_hashes');
-            if(in_array(md5($template), $existingSettings)){
+            if(in_array(EventlistTable::getHash($template), $existingSettings)){
                 $template = str_replace(array_keys($macros), $macros, $template);
                 $template = self::executePhp($template, $macros, $arParams);
             }else{
@@ -659,7 +659,7 @@ class Events {
                     'SEVERITY' => 'ERROR',
                     'AUDIT_TYPE_ID' => 'MLIFE_SMSSERVISES',
                     'MODULE_ID' => 'mlife.smsservices',
-                    'DESCRIPTION' => 'Шаблон не выполнился: '.htmlspecialcharsEx($template)
+                    'DESCRIPTION' => 'Шаблон не выполнился: '.$template
                 ]);
                 $template = '';
             }

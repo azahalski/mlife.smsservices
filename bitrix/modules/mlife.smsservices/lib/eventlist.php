@@ -3,11 +3,12 @@ namespace Mlife\Smsservices;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Config\Configuration;
+use Bitrix\Main\Config;
 Loc::loadMessages(__FILE__);
 
 class EventlistTable extends Entity\DataManager
 {
+    const HASH_ALGO = 'sha512';
     public static $prevHash = '';
 	public static $oldId = null;
 	
@@ -135,10 +136,10 @@ class EventlistTable extends Entity\DataManager
 
                         if(stripos($value, '<?') === false) return $value;
 
-                        $confOb = Configuration::getInstance('mlife.smsservices');
+                        $confOb = Config\Configuration::getInstance('mlife.smsservices');
                         $existingSettings = $confOb->get('template_hashes');
 
-                        $hash = md5($value);
+                        $hash = self::getHash($value);
 
                         //установка новых значений
                         if (!is_array($existingSettings)) $existingSettings = [];
@@ -200,7 +201,7 @@ class EventlistTable extends Entity\DataManager
         $fields = $event->getParameter('fields');
         self::$prevHash = '';
         if($fields['TEMPLATE']){
-            self::$prevHash = md5($fields['TEMPLATE']);
+            self::$prevHash = self::getHash($fields['TEMPLATE']);
         }
     }
 
@@ -276,4 +277,42 @@ class EventlistTable extends Entity\DataManager
 			}
 		}
 	}
+
+    private static function getDefaultKey(): string
+    {
+        static $defaultKey = null;
+        if ($defaultKey === null)
+        {
+            $defaultKey = Config\Option::get('main', 'signer_default_key', false);
+            if (!$defaultKey)
+            {
+                $defaultKey = hash('sha512', \Bitrix\Main\Security\Random::getString(64));
+                Config\Option::set('main', 'signer_default_key', $defaultKey);
+            }
+
+            $options = Config\Configuration::getValue("crypto");
+            if(isset($options["crypto_key"]))
+            {
+                $defaultKey .= $options["crypto_key"];
+            }
+        }
+
+        return $defaultKey;
+    }
+
+    private static function getSecret(): string
+    {
+        $settings = Config\Configuration::getInstance('awz.bxapi');
+        if($settings){
+            $secret = $settings->get('app_rest_auth_secret');
+        }
+        if(!$secret) $secret = self::getDefaultKey();
+        return $secret;
+    }
+
+    public static function getHash(string $msg = ''){
+        $key = self::getSecret();
+        $algorithm = self::HASH_ALGO;
+        return hash_hmac($algorithm, $msg, $key, false);
+    }
 }
