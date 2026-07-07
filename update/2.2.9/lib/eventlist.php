@@ -3,11 +3,13 @@ namespace Mlife\Smsservices;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Config\Configuration;
+use Bitrix\Main\Config;
 Loc::loadMessages(__FILE__);
 
 class EventlistTable extends Entity\DataManager
 {
+    const HASH_ALGO = 'sha512';
+    public static $prevHash = '';
 	public static $oldId = null;
 	
 	public static function getFilePath()
@@ -93,7 +95,7 @@ class EventlistTable extends Entity\DataManager
                             return $value;
                         }
                     ];
-                }
+                    }
             ]),
             new Entity\StringField('ACTIVE', [
                     'required' => false,
@@ -115,7 +117,7 @@ class EventlistTable extends Entity\DataManager
                             public function validate($value, $primary, array $row, Entity\Field $field)
                             {
                                 // Проверяем наличие символа #
-                                if (stripos($value, '<?') !== false && strpos($value, '#') !== false) {
+                                if (stripos($value, '<?') !== false && stripos($value, '#') !== false) {
                                     return new \Bitrix\Main\Entity\FieldError(
                                         $field,
                                         'Символ "#" запрещен в тексте php шаблона. Используйте значение из $arParams["MACROS"] вместо #MACROS#',
@@ -134,13 +136,23 @@ class EventlistTable extends Entity\DataManager
 
                         if(stripos($value, '<?') === false) return $value;
 
-                        $confOb = Configuration::getInstance('mlife.smsservices');
+                        $confOb = Config\Configuration::getInstance('mlife.smsservices');
                         $existingSettings = $confOb->get('template_hashes');
 
-                        $hash = md5($value);
+                        $hash = self::getHash($value);
 
                         //установка новых значений
                         if (!is_array($existingSettings)) $existingSettings = [];
+
+                        $existingSettingsOld = $existingSettings;
+                        if(self::$prevHash){
+                            $existingSettings = [];
+                            foreach($existingSettingsOld as $v){
+                                if($v == self::$prevHash) continue;
+                                $existingSettings[] = $v;
+                            }
+                        }
+
                         if(!in_array($hash, $existingSettings)) {
                             $existingSettings[] = $hash;
                         }
@@ -184,7 +196,15 @@ class EventlistTable extends Entity\DataManager
 		$params = $event->getParameter('fields');
 		\Mlife\Smsservices\EventlistTable::addEvent($params['EVENT']);
 	}
-	
+
+    public static function onBeforeUpdate(\Bitrix\Main\Entity\Event $event){
+        $fields = $event->getParameter('fields');
+        self::$prevHash = '';
+        if($fields['TEMPLATE']){
+            self::$prevHash = self::getHash($fields['TEMPLATE']);
+        }
+    }
+
 	public static function onBeforeDelete(\Bitrix\Main\Entity\Event $event){
 		$params = $event->getParameter('id');
 		if($params['ID']){
@@ -257,4 +277,42 @@ class EventlistTable extends Entity\DataManager
 			}
 		}
 	}
+
+    private static function getDefaultKey(): string
+    {
+        static $defaultKey = null;
+        if ($defaultKey === null)
+        {
+            $defaultKey = Config\Option::get('main', 'signer_default_key', false);
+            if (!$defaultKey)
+            {
+                $defaultKey = hash('sha512', \Bitrix\Main\Security\Random::getString(64));
+                Config\Option::set('main', 'signer_default_key', $defaultKey);
+            }
+
+            $options = Config\Configuration::getValue("crypto");
+            if(isset($options["crypto_key"]))
+            {
+                $defaultKey .= $options["crypto_key"];
+            }
+        }
+
+        return $defaultKey;
+    }
+
+    private static function getSecret(): string
+    {
+        $settings = Config\Configuration::getInstance('awz.bxapi');
+        if($settings){
+            $secret = $settings->get('app_rest_auth_secret');
+        }
+        if(!$secret) $secret = self::getDefaultKey();
+        return $secret;
+    }
+
+    public static function getHash(string $msg = ''){
+        $key = self::getSecret();
+        $algorithm = self::HASH_ALGO;
+        return hash_hmac($algorithm, $msg, $key, false);
+    }
 }

@@ -7,7 +7,7 @@ if(\Bitrix\Main\Loader::includeModule($moduleId)) {
     $existingSettings = [];
 	foreach($templates as $row){
 		if(stripos($row['TEMPLATE'], '<?') === false) continue;
-		$hash = md5($row['TEMPLATE']);
+		$hash = \Mlife\Smsservices\EventlistTable::getHash($row['TEMPLATE']);
 		if(!in_array($hash, $existingSettings)) {
 			$existingSettings[] = $hash;
 		}

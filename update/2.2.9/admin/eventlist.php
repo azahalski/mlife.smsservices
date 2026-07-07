@@ -29,12 +29,17 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
         if(stripos(htmlspecialcharsBack($row->arRes['TEMPLATE']), '<?') !== false){
             $confOb = Configuration::getInstance('mlife.smsservices');
             $existingSettings = $confOb->get('template_hashes');
-            if(!in_array(md5(htmlspecialcharsBack($row->arRes['TEMPLATE'])), $existingSettings)){
+            if(!in_array(\Mlife\Smsservices\EventlistTable::getHash(htmlspecialcharsBack($row->arRes['TEMPLATE'])), $existingSettings)){
                 $this->getAdminList()->AddFilterError(Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_LIST_TEMPLATE_ERR', ['#ID#'=>$row->arRes['ID']]));
             }
         }
-		
-		$params = $row->arRes['PARAMS'];
+
+        try{
+            $params = \Bitrix\Main\Web\Json::decode(htmlspecialcharsBack($row->arRes['PARAMS']));
+        }catch (\Exception $e){
+            $params = [];
+        }
+        if(!is_array($params)) $params = [];
 		$html = '';
 		foreach($params as $name=>$val){
 			$html .= htmlspecialcharsEx($name).': '.htmlspecialcharsEx($val).';<br/>';
