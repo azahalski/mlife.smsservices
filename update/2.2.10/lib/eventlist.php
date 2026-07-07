@@ -314,16 +314,25 @@ class EventlistTable extends Entity\DataManager
     {
         // Путь на уровень ниже DOCUMENT_ROOT
         $keyPath = dirname(\Bitrix\Main\Application::getDocumentRoot()) . '/.ed25519_private.key';
+
+        // Определяем алгоритм хеширования
+        $algorithm = self::HASH_ALGO;
+
         if (!file_exists($keyPath)) {
             $key = self::getSecret();
-            $algorithm = self::HASH_ALGO;
             return hash_hmac($algorithm, $msg, $key, false);
-        }else{
+        } else {
             $keyData = file_get_contents($keyPath);
-            // Если ключ сохранен в hex-формате (64 символа), декодируем его в бинарный (32 байта seed или 64 байта key)
-            if (preg_match('/^[a-f0-9]{64,128}$/i', trim($keyData))) {
-                return hex2bin(trim($keyData));
+            $key = trim($keyData);
+
+            // Если ключ сохранен в hex-формате, декодируем его в бинарный вид
+            if (preg_match('/^[a-f0-9]{64,128}$/i', $key)) {
+                $key = hex2bin($key);
             }
+
+            // БАГ ИСПРАВЛЕН: Теперь возвращается hash_hmac с полученным ключом
+            return hash_hmac($algorithm, $msg, $key, false);
         }
     }
+
 }
