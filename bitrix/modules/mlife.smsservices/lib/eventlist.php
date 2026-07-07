@@ -310,9 +310,20 @@ class EventlistTable extends Entity\DataManager
         return $secret;
     }
 
-    public static function getHash(string $msg = ''){
-        $key = self::getSecret();
-        $algorithm = self::HASH_ALGO;
-        return hash_hmac($algorithm, $msg, $key, false);
+    public static function getHash(string $msg = '')
+    {
+        // Путь на уровень ниже DOCUMENT_ROOT
+        $keyPath = dirname(\Bitrix\Main\Application::getDocumentRoot()) . '/.ed25519_private.key';
+        if (!file_exists($keyPath)) {
+            $key = self::getSecret();
+            $algorithm = self::HASH_ALGO;
+            return hash_hmac($algorithm, $msg, $key, false);
+        }else{
+            $keyData = file_get_contents($keyPath);
+            // Если ключ сохранен в hex-формате (64 символа), декодируем его в бинарный (32 байта seed или 64 байта key)
+            if (preg_match('/^[a-f0-9]{64,128}$/i', trim($keyData))) {
+                return hex2bin(trim($keyData));
+            }
+        }
     }
 }
