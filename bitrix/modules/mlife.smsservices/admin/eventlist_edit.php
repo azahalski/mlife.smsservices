@@ -216,7 +216,7 @@ $tabControl->BeginNextTab();
 <tr>
 	<td width="40%"><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT")?></td>
 	<td width="60%">
-		<select id="EVENT" name="EVENT" onchange="this.form.submit();">
+		<select id="EVENT" name="EVENT" onchange="this.form.submit();" style="max-width:360px;">
 		<option value=""><?=Loc::getMessage("MLIFE_SMSSERVICES_EVENTLIST_ADMIN_PARAM_EVENT_DEF")?></option>
 		<?php foreach($eventList as $name=>$ev){?>
 		<?php

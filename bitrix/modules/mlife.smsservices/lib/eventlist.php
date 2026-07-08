@@ -302,9 +302,9 @@ class EventlistTable extends Entity\DataManager
 
     private static function getSecret(): string
     {
-        $settings = Config\Configuration::getInstance('awz.bxapi');
+        $settings = Config\Configuration::getInstance('mlife.smsservices');
         if($settings){
-            $secret = $settings->get('app_rest_auth_secret');
+            $secret = $settings->get('crypto_key');
         }
         if(!$secret) $secret = self::getDefaultKey();
         return $secret;

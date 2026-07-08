@@ -5,7 +5,7 @@ $module_id = "mlife.smsservices";
 
 \Bitrix\Main\Loader::includeModule($module_id);
 
-use Bitrix\Main\Config\Configuration;
+use Bitrix\Main\Config;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
@@ -27,8 +27,9 @@ class MlifeRowListAdmin extends \Mlife\Smsservices\Main {
 		$row->AddViewField("TEMPLATE", '<pre style="font-size:10px;line-height:12px;padding:0;margin:0;">'.$row->arRes['TEMPLATE'].'</pre>');
 		$row->AddCheckField("ACTIVE");
         if(stripos(htmlspecialcharsBack($row->arRes['TEMPLATE']), '<?') !== false){
-            $confOb = Configuration::getInstance('mlife.smsservices');
+            $confOb = Config\Configuration::getInstance('mlife.smsservices');
             $existingSettings = $confOb->get('template_hashes');
+            if(!is_array($existingSettings)) $existingSettings = [];
             if(!in_array(\Mlife\Smsservices\EventlistTable::getHash(htmlspecialcharsBack($row->arRes['TEMPLATE'])), $existingSettings)){
                 $this->getAdminList()->AddFilterError(Loc::getMessage('MLIFE_SMSSERVICES_EVENTLIST_LIST_TEMPLATE_ERR', ['#ID#'=>$row->arRes['ID']]));
             }
