@@ -1,0 +1,177 @@
+{
+  "success": true,
+  "requestId": "mlife.smsservices-1789056021",
+  "data": {
+    "vulnerabilities": [
+      {
+        "file": "lib/main.php",
+        "line": "174-189",
+        "type": "Authentication Bypass",
+        "severity": "medium",
+        "description": "Подозрение: Authentication Bypass / IDOR. В методе defaultGetAction() действие выполняется на основе $_REQUEST['action'] без проверки check_bitrix_sessid(). Хотя проверка прав ($MODULE_RIGHT == 'W') присутствует на строке 200, отсутствие защиты сессии в блоке обработки групповых действий позволяет авторизованному пользователю с правами 'W' выполнять групповые операции с произвольным action-параметром. call_user_func($act[$_REQUEST['action']], $ID) вызывает callback-функции по имени из пользовательского ввода.",
+        "recommendation": "Добавить проверку check_bitrix_sessid() в метод defaultGetAction() перед выполнением любых действий. Использовать \\Bitrix\\Main\\Security\\Csrf::checkCheckHash() для AJAX-запросов.",
+        "fix": "Before:\npublic function defaultGetAction($arID){\n    $act = $this->getParam(\"CALLBACK_ACTIONS\");\n    if($_REQUEST['action']==\"delete\") {\n\nAfter:\npublic function defaultGetAction($arID){\n    if(!check_bitrix_sessid()) return false;\n    $act = $this->getParam(\"CALLBACK_ACTIONS\");\n    if($_REQUEST['action']==\"delete\") {",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "authenticated-or-limited-authorization-bypass",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "verify-on-latest-version",
+          "confidence": "medium",
+          "rationale": "Set to medium because the finding describes authorization bypass or privilege misuse, but not a direct high-impact IDOR, financial bug, or confirmed account takeover in the journal text."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-10T13:05:10+00:00"
+        }
+      },
+      {
+        "file": "lib/events.php",
+        "line": "622",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подозрение: Remote Code Execution через eval(). Метод executePhp() выполняет PHP-код шаблона через eval(). Хотя защита isPhpCodeSafe() блокирует большинство опасных конструкций (eval, assert, include, системные функции, callable-аргументы) и требуется право edit_php, теоретически возможно обходной паттерн. Проверка хеша шаблона защищает от подмены через SQL injection.",
+        "recommendation": "Рассмотреть использование безопасных альтернатив eval(): Twig sandbox, или ограничение whitelist допустимых макросов без выполнения произвольного PHP кода. Убедиться что isPhpCodeSafe() покрывает все edge cases PHP 8+.",
+        "fix": "Before:\n$result = eval('use \\Bitrix\\Main\\Mail\\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');\n\nAfter:\n// Рассмотреть использование Twig с SandboxExtension\n$twig = new \\Twig\\Environment($loader, ['sandboxed' => true]);\n$result = $twig->renderString($template, $macros);",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "high",
+          "changed": true,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-10T13:05:10+00:00"
+        }
+      },
+      {
+        "file": "options.php",
+        "line": "66-114",
+        "type": "Cross-Site Scripting",
+        "severity": "low",
+        "description": "Подозрение: Stored XSS. Значения из $_REQUEST сохраняются напрямую в конфигурацию модуля без валидации на допустимые символы. Хотя при выводе используется htmlspecialcharsbx(), если где-то в коде модуля значения будут прочитаны без экранирования, это может привести к stored XSS. Особенно критично для полей sender, login, passw которые могут содержать произвольный текст.",
+        "recommendation": "Добавить валидацию входных данных перед сохранением. Очистить специальные символы для чувствительных полей (login, transport). Добавить CSP заголовки для административной страницы.",
+        "fix": "Before:\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"transport\", $_REQUEST[\"transport\"]);\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"login\", $_REQUEST[\"login\"]);\n\nAfter:\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"transport\", preg_replace('/[^a-zA-Z0-9_]/', '', $_REQUEST[\"transport\"]));\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"login\", htmlspecialcharsbx(trim($_REQUEST[\"login\"])));",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "low",
+          "changed": false,
+          "category": "stored-xss-trusted-editor-content",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "harden-output-escaping",
+          "confidence": "high",
+          "rationale": "Downgraded because the journal describes a stored XSS source controlled by a Bitrix admin/content editor or another trusted content-management role. In BUS such users can normally publish HTML/JS through legitimate site-management mechanisms, so this is template hardening rather than a high module vulnerability unless a low-privileged/external source is proven."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-10T13:05:10+00:00"
+        }
+      },
+      {
+        "file": "lib/eventlist.php",
+        "line": "179",
+        "type": "Information Disclosure",
+        "severity": "low",
+        "description": "Подозрение: Information Disclosure. file_put_contents() записывает данные конфигурации (.settings.php) в файловую систему модуля. Если файл .settings.php будет удалён или недоступен для записи, хеши шаблонов не сохранятся. Кроме того, запись в файл модуля может быть проблематичной при использовании read-only файловой системы в контейнерных средах.",
+        "recommendation": "Использовать \\Bitrix\\Main\\Config\\Configuration для сохранения хешей вместо прямой записи в файл. Добавить обработку ошибок записи и логирование.",
+        "fix": "Before:\nfile_put_contents($path, \"<\" . \"?php\\nreturn \" . $data . \";\\n\");\n\nAfter:\n\\Bitrix\\Main\\Config\\Configuration::getInstance('mlife.smsservices')->add('template_hashes', $data['template_hashes']);",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "low",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-10T13:05:10+00:00"
+        }
+      }
+    ],
+    "summary": "Обнаружено 4 уязвимости в 4 файлах при анализе 73 файлов модуля. Максимальная severity: medium.",
+    "scannedFiles": 73,
+    "riskLevel": "high",
+    "auditedFiles": [
+      "lib/main.php",
+      "lib/events.php",
+      "lib/sender.php",
+      "lib/eventlist.php",
+      "options.php",
+      "admin/eventlist_edit.php"
+    ],
+    "reviewSummary": {
+      "reviewedAt": "2026-09-10",
+      "method": "BUS-aware triage: preserve original finding fields except severity, add reviewed node with old severity and rationale.",
+      "totals": {
+        "vulnerabilities": 4,
+        "changedSeverity": 1,
+        "unchangedSeverity": 3
+      },
+      "rawSeverityCounts": {
+        "medium": 1,
+        "low": 3
+      },
+      "reviewedSeverityCounts": {
+        "medium": 1,
+        "high": 1,
+        "low": 2
+      },
+      "currentScope": {
+        "total": 4,
+        "rawSeverityCounts": {
+          "medium": 1,
+          "low": 3
+        },
+        "reviewedSeverityCounts": {
+          "medium": 1,
+          "high": 1,
+          "low": 2
+        },
+        "reviewedCategories": {
+          "authenticated-or-limited-authorization-bypass": 1,
+          "confirmed-backdoor": 1,
+          "stored-xss-trusted-editor-content": 1,
+          "kept-as-reported": 1
+        }
+      },
+      "historicalUpdatePackages": {
+        "total": 0,
+        "rawSeverityCounts": {},
+        "reviewedSeverityCounts": {},
+        "reviewedCategories": {}
+      },
+      "caveats": [
+        "Type, file, line, description, recommendation and fix are preserved from the source journal.",
+        "Severity is replaced with reviewed triage severity."
+      ]
+    },
+    "feedbackSummary": {
+      "updatedAt": "2026-09-10T13:05:10+00:00",
+      "applied": 4
+    }
+  }
+}

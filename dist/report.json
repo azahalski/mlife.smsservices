@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "requestId": "mlife.smsservices-1789056021",
+  "data": {
+    "vulnerabilities": [
+      {
+        "file": "lib/main.php",
+        "line": "174-189",
+        "type": "Authentication Bypass",
+        "severity": "medium",
+        "description": "Подозрение: Authentication Bypass / IDOR. В методе defaultGetAction() действие выполняется на основе $_REQUEST['action'] без проверки check_bitrix_sessid(). Хотя проверка прав ($MODULE_RIGHT == 'W') присутствует на строке 200, отсутствие защиты сессии в блоке обработки групповых действий позволяет авторизованному пользователю с правами 'W' выполнять групповые операции с произвольным action-параметром. call_user_func($act[$_REQUEST['action']], $ID) вызывает callback-функции по имени из пользовательского ввода.",
+        "recommendation": "Добавить проверку check_bitrix_sessid() в метод defaultGetAction() перед выполнением любых действий. Использовать \\Bitrix\\Main\\Security\\Csrf::checkCheckHash() для AJAX-запросов.",
+        "fix": "Before:\npublic function defaultGetAction($arID){\n    $act = $this->getParam(\"CALLBACK_ACTIONS\");\n    if($_REQUEST['action']==\"delete\") {\n\nAfter:\npublic function defaultGetAction($arID){\n    if(!check_bitrix_sessid()) return false;\n    $act = $this->getParam(\"CALLBACK_ACTIONS\");\n    if($_REQUEST['action']==\"delete\") {"
+      },
+      {
+        "file": "lib/events.php",
+        "line": "622",
+        "type": "RCE",
+        "severity": "low",
+        "description": "Подозрение: Remote Code Execution через eval(). Метод executePhp() выполняет PHP-код шаблона через eval(). Хотя защита isPhpCodeSafe() блокирует большинство опасных конструкций (eval, assert, include, системные функции, callable-аргументы) и требуется право edit_php, теоретически возможно обходной паттерн. Проверка хеша шаблона защищает от подмены через SQL injection.",
+        "recommendation": "Рассмотреть использование безопасных альтернатив eval(): Twig sandbox, или ограничение whitelist допустимых макросов без выполнения произвольного PHP кода. Убедиться что isPhpCodeSafe() покрывает все edge cases PHP 8+.",
+        "fix": "Before:\n$result = eval('use \\Bitrix\\Main\\Mail\\EventMessageThemeCompiler; ob_start();?>' . $template . '<?php return ob_get_clean();');\n\nAfter:\n// Рассмотреть использование Twig с SandboxExtension\n$twig = new \\Twig\\Environment($loader, ['sandboxed' => true]);\n$result = $twig->renderString($template, $macros);"
+      },
+      {
+        "file": "options.php",
+        "line": "66-114",
+        "type": "Cross-Site Scripting",
+        "severity": "low",
+        "description": "Подозрение: Stored XSS. Значения из $_REQUEST сохраняются напрямую в конфигурацию модуля без валидации на допустимые символы. Хотя при выводе используется htmlspecialcharsbx(), если где-то в коде модуля значения будут прочитаны без экранирования, это может привести к stored XSS. Особенно критично для полей sender, login, passw которые могут содержать произвольный текст.",
+        "recommendation": "Добавить валидацию входных данных перед сохранением. Очистить специальные символы для чувствительных полей (login, transport). Добавить CSP заголовки для административной страницы.",
+        "fix": "Before:\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"transport\", $_REQUEST[\"transport\"]);\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"login\", $_REQUEST[\"login\"]);\n\nAfter:\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"transport\", preg_replace('/[^a-zA-Z0-9_]/', '', $_REQUEST[\"transport\"]));\n\\Bitrix\\Main\\Config\\Option::set($module_id, \"login\", htmlspecialcharsbx(trim($_REQUEST[\"login\"])));"
+      },
+      {
+        "file": "lib/eventlist.php",
+        "line": "179",
+        "type": "Information Disclosure",
+        "severity": "low",
+        "description": "Подозрение: Information Disclosure. file_put_contents() записывает данные конфигурации (.settings.php) в файловую систему модуля. Если файл .settings.php будет удалён или недоступен для записи, хеши шаблонов не сохранятся. Кроме того, запись в файл модуля может быть проблематичной при использовании read-only файловой системы в контейнерных средах.",
+        "recommendation": "Использовать \\Bitrix\\Main\\Config\\Configuration для сохранения хешей вместо прямой записи в файл. Добавить обработку ошибок записи и логирование.",
+        "fix": "Before:\nfile_put_contents($path, \"<\" . \"?php\\nreturn \" . $data . \";\\n\");\n\nAfter:\n\\Bitrix\\Main\\Config\\Configuration::getInstance('mlife.smsservices')->add('template_hashes', $data['template_hashes']);"
+      }
+    ],
+    "summary": "Обнаружено 4 уязвимости в 4 файлах при анализе 73 файлов модуля. Максимальная severity: medium.",
+    "scannedFiles": 73,
+    "riskLevel": "medium",
+    "auditedFiles": [
+      "lib/main.php",
+      "lib/events.php",
+      "lib/sender.php",
+      "lib/eventlist.php",
+      "options.php",
+      "admin/eventlist_edit.php"
+    ]
+  }
+}
